@@ -9,6 +9,6 @@
       Title="UserMapView">
 
     <Grid>
-        
-    </Grid>
+		<TextBlock Text="UserMapView" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+	</Grid>
 </Page>
