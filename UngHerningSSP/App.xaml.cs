@@ -1,6 +1,11 @@
-﻿using System.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Windows;
+using UngHerningSSP.DataAccess;
+using UngHerningSSP.Models;
+using UngHerningSSP.Models.Repositories;
 using UngHerningSSP.ViewModels;
 using UngHerningSSP.Views;
 
