@@ -23,6 +23,7 @@ public partial class App : Application
 		};
 		main.Show();
 		base.OnStartup(e);
+		Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = "AAPKf3d1da66588d4eeb86250040d0d006b66nTEGQ35pEtvNAJVQ1Zo5-IORkoALRCSqPHiiTE9azkgejCSEV2qhr-Z2Pl6dJ-I";
 	}
 }
 

@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UngHerningSSP.ViewModels;
+using Esri.ArcGISRuntime.Geometry;
+using Esri.ArcGISRuntime.Mapping;
 
 namespace UngHerningSSP.Views;
 /// <summary>
@@ -19,8 +22,30 @@ namespace UngHerningSSP.Views;
 /// </summary>
 public partial class UserMapView : Page
 {
+	UserMapViewModel viewModel = new();
 	public UserMapView()
 	{
 		InitializeComponent();
+		DataContext = viewModel;
+	}
+
+	private void MapView_GeoViewTapped(object sender, Esri.ArcGISRuntime.UI.Controls.GeoViewInputEventArgs e)
+	{
+		if (MarkerControl.Visibility == Visibility.Collapsed)
+		{
+			MarkerControl.Visibility = Visibility.Visible;
+			//MapPoint p = e.Location!;
+			viewModel.CreateNewPoint(e.Location!);
+		}
+		else
+		{
+			viewModel.DeletePoint();
+			viewModel.CreateNewPoint(e.Location!);
+		}
+	}
+
+	private void btSave_Click(object sender, RoutedEventArgs e)
+	{
+		MarkerControl.Visibility = Visibility.Collapsed;
 	}
 }

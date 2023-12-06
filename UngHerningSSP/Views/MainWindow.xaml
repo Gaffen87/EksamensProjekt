@@ -10,13 +10,15 @@
 	Title="MainWindow"
 	Width="1920"
 	Height="1080"
+	WindowStartupLocation="CenterScreen"
 	WindowState="Maximized"
 	mc:Ignorable="d">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="100" />
+			<RowDefinition Height="50" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
+		<Frame Background="Aqua" />
 		<Frame
 			Grid.Row="1"
 			Content="{Binding CurrentViewModel}"

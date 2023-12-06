@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 using UngHerningSSP.DataAccess;
 
 namespace UngHerningSSP.Models.Repositories;
-public class UserRepo(DbAccess dbAccess) : IRepository<User>
+public class UserRepo : IRepository<User>
 {
+	private readonly DbAccess dbAccess;
+
+	public UserRepo(DbAccess dbAccess)
+    {
+		this.dbAccess = dbAccess;
+	}
+
     public int Insert(User user)
 	{
 		return dbAccess.SaveDataAndReturnID("spInsertUser", new { user.FirstName, user.LastName, user.UserName, user.Password, user.IsAdmin });
