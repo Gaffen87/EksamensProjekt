@@ -14,15 +14,48 @@ using System.Drawing;
 using System.Transactions;
 using WinRT;
 using CommunityToolkit.Mvvm.Input;
+using System.Windows;
+using System.Configuration;
+using System.Windows.Navigation;
+using UngHerningSSP.Views;
+using Microsoft.Extensions.Configuration;
+using System.Collections.ObjectModel;
+using UngHerningSSP.Models;
+using UngHerningSSP.Models.Repositories;
 
 namespace UngHerningSSP.ViewModels;
 public partial class UserMapViewModel : ViewModelBase
 {
+    HotspotRepo hotspotRepo = new();
+    UserRepo userRepo = new();
+    LocationRepo locationRepo = new();
     public UserMapViewModel()
     {
         SetupMap();
         CreateGraphics();
 	}
+
+    public ObservableCollection<Hotspot> Hotspots { get; set; } = new()
+    {
+        new Hotspot()
+        {
+            Name = "Herning Station",
+            Location = new Location() { Longitude = 56.123, Latitude = 8.56 },
+            Priority = "Gul"
+        }
+    };
+
+    public void CreateHotspot()
+    {
+        User user = userRepo.Retrieve(2);
+        Location location = new Location { Latitude = CurrentMapPoint.X, Longitude = CurrentMapPoint.Y };
+        location.ID = locationRepo.InsertLocation(location);
+        Hotspot hotspot = new Hotspot() { Name = "Nyt sted", Priority = "Rød", Location = location, User = user };
+        hotspotRepo.InsertHotspot(hotspot, user, location);
+    }
+
+
+
 
     [ObservableProperty]
 	private Map? map;

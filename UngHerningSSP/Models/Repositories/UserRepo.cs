@@ -9,11 +9,10 @@ using UngHerningSSP.DataAccess;
 namespace UngHerningSSP.Models.Repositories;
 public class UserRepo : IRepository<User>
 {
-	private readonly DbAccess dbAccess;
+	private readonly DbAccess dbAccess = new();
 
-	public UserRepo(DbAccess dbAccess)
+	public UserRepo()
     {
-		this.dbAccess = dbAccess;
 	}
 
     public int Insert(User user)
@@ -23,7 +22,7 @@ public class UserRepo : IRepository<User>
 
 	public User Retrieve(int id) 
 	{
-		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { ID = id });
+		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { UserID = id });
 	}
 
 	public IEnumerable<User> RetrieveAll()

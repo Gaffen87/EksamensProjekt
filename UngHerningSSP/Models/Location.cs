@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace UngHerningSSP.Models;
 public class Location
 {
-    public int LocationID { get; set; }
+    public int ID { get; set; }
 
     public double Latitude { get; set; }
 

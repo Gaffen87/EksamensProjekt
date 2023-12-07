@@ -17,8 +17,7 @@ public class DbAccess
 {
     public DbAccess()
     {
-		IConfigurationRoot config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-		connectionString = config.GetConnectionString("DbConnection");
+		connectionString = App.config.GetConnectionString("DbConnection");
 	}
 	private readonly string? connectionString;
 

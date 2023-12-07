@@ -32,8 +32,10 @@ public partial class LoginView : Page
         string path = "User.txt";
 
 
-        if (username == "test" && password == "test")
+        if ((username == "test" || username == "admin") && password == "test")
         {
+            if (username == "admin")
+                App.config.GetSection("UserSettings").GetSection("IsAdmin").Value = "true";
 
             // TODO: Add code to navigate to the main application window or perform other actions.
             NavigationService.Navigate(new UserMapView());

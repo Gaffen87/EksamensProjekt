@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace UngHerningSSP.Models;
 public class Observation
 {
-    public int ObservationID { get; set; }
+    public int ID { get; set; }
 
     public DateOnly Date { get; set; }
 

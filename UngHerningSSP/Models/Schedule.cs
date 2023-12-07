@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace UngHerningSSP.Models;
 public class Schedule
 {
-    public int ScheduleID { get; set; }
+    public int ID { get; set; }
 
     public string DayOfWeek { get; set; }
 

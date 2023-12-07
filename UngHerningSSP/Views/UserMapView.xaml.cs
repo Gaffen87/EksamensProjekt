@@ -1,20 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using UngHerningSSP.ViewModels;
-using Esri.ArcGISRuntime.Geometry;
-using Esri.ArcGISRuntime.Mapping;
 
 namespace UngHerningSSP.Views;
 /// <summary>
@@ -31,20 +17,29 @@ public partial class UserMapView : Page
 
 	private void MapView_GeoViewTapped(object sender, Esri.ArcGISRuntime.UI.Controls.GeoViewInputEventArgs e)
 	{
-		if (MarkerControl.Visibility == Visibility.Collapsed)
+		if (App.config.GetSection("UserSettings").GetSection("IsAdmin").Value == "true")
 		{
-			MarkerControl.Visibility = Visibility.Visible;
-			//MapPoint p = e.Location!;
-			viewModel.CreateNewPoint(e.Location!);
-		}
-		else
-		{
-			viewModel.DeletePoint();
-			viewModel.CreateNewPoint(e.Location!);
+			if (MarkerControl.Visibility == Visibility.Collapsed)
+			{
+				MarkerControl.Visibility = Visibility.Visible;
+				//MapPoint p = e.Location!;
+				viewModel.CreateNewPoint(e.Location!);
+			}
+			else
+			{
+				viewModel.DeletePoint();
+				viewModel.CreateNewPoint(e.Location!);
+			}
 		}
 	}
 
 	private void btSave_Click(object sender, RoutedEventArgs e)
+	{
+		viewModel.CreateHotspot();
+		MarkerControl.Visibility = Visibility.Collapsed;
+	}
+
+	private void btCancel_Click(object sender, RoutedEventArgs e)
 	{
 		MarkerControl.Visibility = Visibility.Collapsed;
 	}

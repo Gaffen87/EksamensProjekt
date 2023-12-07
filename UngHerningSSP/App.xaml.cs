@@ -15,9 +15,11 @@ namespace UngHerningSSP;
 /// </summary>
 public partial class App : Application
 {
+	public readonly static IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
 	protected override void OnStartup(StartupEventArgs e)
 	{
-		MainWindow main = new MainWindow()
+		MainWindow main = new()
 		{
 			DataContext = new MainViewModel()
 		};

@@ -9,8 +9,8 @@
 	xmlns:viewmodel="clr-namespace:UngHerningSSP.ViewModels"
 	Title="UserMapView"
 	d:DataContext="{d:DesignInstance Type=viewmodel:UserMapViewModel}"
-	d:DesignHeight="450"
-	d:DesignWidth="800"
+	d:DesignHeight="1080"
+	d:DesignWidth="1920"
 	Background="White"
 	mc:Ignorable="d">
 
@@ -26,13 +26,35 @@
 				Content="Hotspots"
 				FontSize="18"
 				FontWeight="Bold" />
-			<ListView>
-				<ListViewItem>
-					<TextBlock Text="Hotspot1" />
-				</ListViewItem>
-				<ListViewItem>
-					<TextBlock Text="Hotspot2" />
-				</ListViewItem>
+			<ListView d:ItemsSource="{d:SampleData}" ItemsSource="{Binding Hotspots}">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<Grid Margin="0,5,0,5">
+							<StackPanel>
+								<TextBlock Text="{Binding Name}" />
+								<Rectangle Width="10" Height="10">
+									<Rectangle.Style>
+										<Style TargetType="Rectangle">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding Priority}" Value="Rød">
+													<Setter Property="Fill" Value="Red" />
+												</DataTrigger>
+												<DataTrigger Binding="{Binding Priority}" Value="Gul">
+													<Setter Property="Fill" Value="Yellow" />
+												</DataTrigger>
+												<DataTrigger Binding="{Binding Priority}" Value="Grøn">
+													<Setter Property="Fill" Value="Green" />
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Rectangle.Style>
+								</Rectangle>
+								<TextBlock Text="{Binding location.Longitude}" />
+								<TextBlock Text="{Binding location.Latitude}" />
+							</StackPanel>
+						</Grid>
+					</DataTemplate>
+				</ListView.ItemTemplate>
 			</ListView>
 		</StackPanel>
 		<StackPanel
@@ -40,12 +62,15 @@
 			Grid.Column="1"
 			Width="200"
 			Height="125"
-			Margin="20,0,0,50"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Bottom"
+			Margin="0,200,200,0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
 			Panel.ZIndex="1"
 			Background="White"
 			Visibility="Collapsed">
+			<StackPanel.BitmapEffect>
+				<DropShadowBitmapEffect />
+			</StackPanel.BitmapEffect>
 			<Label
 				HorizontalContentAlignment="Center"
 				Background="Aqua"
@@ -70,7 +95,7 @@
 					x:Name="btCancel"
 					Width="50"
 					Margin="10"
-					Click="btSave_Click"
+					Click="btCancel_Click"
 					Command="{Binding DeletePointCommand}"
 					Content="Fortryd" />
 			</WrapPanel>
