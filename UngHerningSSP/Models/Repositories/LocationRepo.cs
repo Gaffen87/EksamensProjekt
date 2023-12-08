@@ -19,5 +19,15 @@ namespace UngHerningSSP.Models.Repositories
 		{
 			return dbAccess.SaveDataAndReturnID("spInsertLocation", new { location.Latitude, location.Longitude });
 		}
+
+		public Location GetHotspotLocation(int id)
+		{
+			return dbAccess.LoadSingle<Location, dynamic>("spGetHotspotLocation", new { HotspotID = id });
+		}
+
+		public List<Location> RetrieveAllLocations()
+		{
+			return dbAccess.LoadMultiple<Location>("spRetrieveAllLocations").ToList();
+		}
     }
 }

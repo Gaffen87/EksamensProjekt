@@ -39,6 +39,11 @@ public class DbAccess
 		return con.QuerySingle<T>(sql, parameters, commandType: CommandType.StoredProcedure);
 	}
 
+	public IEnumerable<T> LoadMultiple<T>(string sql)
+	{
+		using SqlConnection con = new(connectionString);
+		return con.Query<T>(sql, commandType: CommandType.StoredProcedure);
+	}
 	public IEnumerable<T> LoadMultiple<T, U>(string sql, U parameters)
 	{
 		using SqlConnection con = new(connectionString);

@@ -31,7 +31,7 @@
 					<DataTemplate>
 						<Grid Margin="0,5,0,5">
 							<StackPanel>
-								<TextBlock Text="{Binding Name}" />
+								<TextBlock Text="{Binding Title}" />
 								<Rectangle Width="10" Height="10">
 									<Rectangle.Style>
 										<Style TargetType="Rectangle">
@@ -49,8 +49,8 @@
 										</Style>
 									</Rectangle.Style>
 								</Rectangle>
-								<TextBlock Text="{Binding location.Longitude}" />
-								<TextBlock Text="{Binding location.Latitude}" />
+								<TextBlock Text="{Binding Location.Longitude}" />
+								<TextBlock Text="{Binding Location.Latitude}" />
 							</StackPanel>
 						</Grid>
 					</DataTemplate>
@@ -61,11 +61,12 @@
 			x:Name="MarkerControl"
 			Grid.Column="1"
 			Width="200"
-			Height="125"
-			Margin="0,200,200,0"
+			Height="180"
+			Margin="0,0,300,0"
 			HorizontalAlignment="Right"
-			VerticalAlignment="Top"
+			VerticalAlignment="Center"
 			Panel.ZIndex="1"
+			d:Visibility="Visible"
 			Background="White"
 			Visibility="Collapsed">
 			<StackPanel.BitmapEffect>
@@ -75,6 +76,11 @@
 				HorizontalContentAlignment="Center"
 				Background="Aqua"
 				Content="Opret hotspot" />
+			<TextBox
+				Width="150"
+				Margin="5"
+				HorizontalContentAlignment="Center"
+				Text="{Binding HotspotTitle, UpdateSourceTrigger=PropertyChanged}" />
 			<Label Content="Størrelse:" />
 			<Slider
 				x:Name="slider"
@@ -84,6 +90,36 @@
 				Minimum="1"
 				TickFrequency="2"
 				Value="{Binding CurrentPoint.Size}" />
+			<ComboBox
+				Margin="10"
+				HorizontalContentAlignment="Center"
+				d:IsDropDownOpen="True"
+				SelectedIndex="0"
+				SelectedItem="{Binding Colors}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<WrapPanel>
+							<Rectangle
+								Width="10"
+								Height="10"
+								Stroke="Black"
+								StrokeThickness="0.5">
+								<Rectangle.Style>
+									<Style TargetType="Rectangle">
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding Colors}" Value="Rød">
+												<Setter Property="Fill" Value="Red" />
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Rectangle.Style>
+							</Rectangle>
+							<TextBlock Text="{Binding Colors, UpdateSourceTrigger=PropertyChanged}" />
+						</WrapPanel>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+
+			</ComboBox>
 			<WrapPanel HorizontalAlignment="Center">
 				<Button
 					x:Name="btSave"

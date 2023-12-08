@@ -15,7 +15,7 @@ public class UnitTest1
 	public void Init() 
 	{
 		dbAccess = new DbAccess();
-		repo = new(dbAccess);
+		repo = new();
 	}
 
 	[TestMethod]

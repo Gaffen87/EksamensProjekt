@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Esri.ArcGISRuntime.Mapping;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Esri.ArcGISRuntime.Geometry;
-using Esri.ArcGISRuntime.UI;
-using Esri.ArcGISRuntime.Symbology;
-using System.Drawing;
-using System.Transactions;
-using WinRT;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Windows;
-using System.Configuration;
-using System.Windows.Navigation;
-using UngHerningSSP.Views;
-using Microsoft.Extensions.Configuration;
+using Esri.ArcGISRuntime.Geometry;
+using Esri.ArcGISRuntime.Mapping;
+using Esri.ArcGISRuntime.Symbology;
+using Esri.ArcGISRuntime.UI;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Drawing;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 
@@ -31,52 +18,52 @@ public partial class UserMapViewModel : ViewModelBase
     LocationRepo locationRepo = new();
     public UserMapViewModel()
     {
+        Hotspots = new(hotspotRepo.RetrieveAllHotspots());
         SetupMap();
         CreateGraphics();
 	}
 
-    public ObservableCollection<Hotspot> Hotspots { get; set; } = new()
-    {
-        new Hotspot()
-        {
-            Name = "Herning Station",
-            Location = new Location() { Longitude = 56.123, Latitude = 8.56 },
-            Priority = "Gul"
-        }
-    };
+    public ObservableCollection<Hotspot> Hotspots { get; set; }
 
     public void CreateHotspot()
     {
         User user = userRepo.Retrieve(2);
-        Location location = new Location { Latitude = CurrentMapPoint.X, Longitude = CurrentMapPoint.Y };
+        Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint), Longitude = Location.GetLongitude(CurrentMapPoint) };
         location.ID = locationRepo.InsertLocation(location);
-        Hotspot hotspot = new Hotspot() { Name = "Nyt sted", Priority = "Rød", Location = location, User = user };
+        Hotspot hotspot = new() { Title = HotspotTitle, Priority = "Rød", Location = location, User = user };
         hotspotRepo.InsertHotspot(hotspot, user, location);
+
+        Hotspots.Add(hotspot);
     }
-
-
-
 
     [ObservableProperty]
 	private Map? map;
     [ObservableProperty]
     private GraphicsOverlayCollection? graphicsOverlays;
     [ObservableProperty]
-    private GraphicsOverlay symboler;
+    private GraphicsOverlay? symboler;
     [ObservableProperty]
-    private SimpleMarkerSymbol currentPoint;
+    private SimpleMarkerSymbol? currentPoint;
     [ObservableProperty]
-    private Graphic currentGraphic;
+    private Graphic? currentGraphic;
     [ObservableProperty]
-    private MapPoint currentMapPoint;
+    private MapPoint? currentMapPoint;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CurrentPoint))]
     private double size = 10;
+    [ObservableProperty]
+    private string hotspotTitle = "Ny Hotspot";
+    [ObservableProperty]
+    private string? hotspotColor;
 
+    public string[] Colors { get; set; } = { "-- Vælg Prioritet --", "Rød", "Gul", "Grøn" };
 
+	partial void OnHotspotColorChanged(string? value)
+	{
+		
+	}
 
-
-    private void SetupMap()
+	private void SetupMap()
     {
         Map = new(BasemapStyle.OSMLightGray);
 
@@ -104,19 +91,7 @@ public partial class UserMapViewModel : ViewModelBase
     {
         var location = new MapPoint(longitude, latitude, SpatialReferences.Wgs84);
 
-        var symbol = new SimpleMarkerSymbol
-        {
-            Style = SimpleMarkerSymbolStyle.Circle,
-            Color = Color.FromArgb(50, Color.Red),
-            Size = size
-        };
-
-        symbol.Outline = new SimpleLineSymbol
-        {
-            Style = SimpleLineSymbolStyle.Solid,
-            Color = Color.Orange,
-            Width = 0.5
-        };
+        var symbol = CreateSymbol(SimpleMarkerSymbolStyle.Circle, Color.Yellow);
 
         return new Graphic(location, symbol);
     }
@@ -127,19 +102,7 @@ public partial class UserMapViewModel : ViewModelBase
 
         CurrentMapPoint = newPoint;
 
-		var symbol = new SimpleMarkerSymbol
-		{
-			Style = SimpleMarkerSymbolStyle.Circle,
-			Color = Color.FromArgb(50, Color.Red),
-			Size = this.Size
-		};
-
-		symbol.Outline = new SimpleLineSymbol
-		{
-			Style = SimpleLineSymbolStyle.Solid,
-			Color = Color.Orange,
-			Width = 0.5
-		};
+        var symbol = CreateSymbol(SimpleMarkerSymbolStyle.Circle, Color.Red);
 
         var newGraphic = new Graphic(newPoint, symbol);
 
@@ -149,6 +112,25 @@ public partial class UserMapViewModel : ViewModelBase
 
         CurrentPoint = symbol;
 	}
+
+    public SimpleMarkerSymbol CreateSymbol(SimpleMarkerSymbolStyle style, Color color)
+    {
+        var symbol = new SimpleMarkerSymbol
+        {
+            Style = style,
+            Color = Color.FromArgb(50, color),
+            Size = this.Size
+        };
+
+        symbol.Outline = new SimpleLineSymbol
+        {
+            Style = SimpleLineSymbolStyle.Solid,
+            Color = Color.Black,
+            Width = 0.2
+        };
+
+        return symbol;
+    }
 
     [RelayCommand]
     public void DeletePoint()
