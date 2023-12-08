@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Drawing;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
+using UngHerningSSP.Services;
 
 namespace UngHerningSSP.ViewModels;
 public partial class UserMapViewModel : ViewModelBase
@@ -19,8 +20,9 @@ public partial class UserMapViewModel : ViewModelBase
     public UserMapViewModel()
     {
         Hotspots = new(hotspotRepo.RetrieveAllHotspots());
-        SetupMap();
-        CreateGraphics();
+        Initialize();
+
+		CreateNewPoint(new MapPoint(8.98, 56.13, SpatialReferences.Wgs84));
 	}
 
     public ObservableCollection<Hotspot> Hotspots { get; set; }
@@ -49,92 +51,39 @@ public partial class UserMapViewModel : ViewModelBase
     [ObservableProperty]
     private MapPoint? currentMapPoint;
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CurrentPoint))]
     private double size = 10;
     [ObservableProperty]
-    private string hotspotTitle = "Ny Hotspot";
+    private string hotspotTitle = "Nyt Hotspot";
     [ObservableProperty]
     private string? hotspotColor;
 
-    public string[] Colors { get; set; } = { "-- Vælg Prioritet --", "Rød", "Gul", "Grøn" };
+    public List<string> Colors { get; set; } = new() { "-- Vælg Prioritet --", "Rød", "Gul", "Grøn" };
 
-	partial void OnHotspotColorChanged(string? value)
-	{
-		
-	}
-
-	private void SetupMap()
+    private void Initialize()
     {
-        Map = new(BasemapStyle.OSMLightGray);
+        Map = ArcGIS.SetupMap();
+        Symboler = ArcGIS.InitGraphicsOverlay();
+        GraphicsOverlays = new()
+		{
+			Symboler
+		};
 
-        Map.InitialViewpoint = new Viewpoint(56.13, 8.98, 100000);
-
-        Map.ReferenceScale = 100000;
-    }
-
-    private void CreateGraphics()
-    {
-        GraphicsOverlays = new GraphicsOverlayCollection();
-
-        Symboler = new GraphicsOverlay();
-
-        Symboler.ScaleSymbols = true;
-
-        GraphicsOverlays.Add(Symboler);
-
-        var point = CreatePoint(8.98, 56.13, Size);
-
-        Symboler.Graphics.Add(point);
-    }
-
-    private Graphic CreatePoint(double longitude, double latitude, double size)
-    {
-        var location = new MapPoint(longitude, latitude, SpatialReferences.Wgs84);
-
-        var symbol = CreateSymbol(SimpleMarkerSymbolStyle.Circle, Color.Yellow);
-
-        return new Graphic(location, symbol);
     }
 
     public void CreateNewPoint(MapPoint location)
     {
-        var newPoint = new MapPoint(location.X, location.Y, location.SpatialReference);
+        CurrentMapPoint = ArcGIS.CreateMarker(location);
 
-        CurrentMapPoint = newPoint;
+        CurrentPoint = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, Color.Red, Size);
 
-        var symbol = CreateSymbol(SimpleMarkerSymbolStyle.Circle, Color.Red);
+        CurrentGraphic = new Graphic(CurrentMapPoint, CurrentPoint);
 
-        var newGraphic = new Graphic(newPoint, symbol);
-
-        CurrentGraphic = newGraphic;
-
-        Symboler.Graphics.Add(newGraphic);
-
-        CurrentPoint = symbol;
+        Symboler!.Graphics.Add(CurrentGraphic);
 	}
-
-    public SimpleMarkerSymbol CreateSymbol(SimpleMarkerSymbolStyle style, Color color)
-    {
-        var symbol = new SimpleMarkerSymbol
-        {
-            Style = style,
-            Color = Color.FromArgb(50, color),
-            Size = this.Size
-        };
-
-        symbol.Outline = new SimpleLineSymbol
-        {
-            Style = SimpleLineSymbolStyle.Solid,
-            Color = Color.Black,
-            Width = 0.2
-        };
-
-        return symbol;
-    }
 
     [RelayCommand]
     public void DeletePoint()
     {
-        Symboler.Graphics.Remove(CurrentGraphic);
+        Symboler!.Graphics.Remove(CurrentGraphic!);
     }
 }
