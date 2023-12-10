@@ -14,20 +14,24 @@ namespace UngHerningSSP.Services;
 
 public class ArcGIS
 {
+	// Opsætter kortet der vises via MapView control
 	public static Map SetupMap()
 	{
-		Map map = new(BasemapStyle.OSMLightGray);
+		// Sætter kortets udseende, zoom, sted og referenceskala
+		Map map = new(BasemapStyle.OSMLightGray)
+		{
+			InitialViewpoint = new Viewpoint(56.13, 8.98, 100000),
 
-		map.InitialViewpoint = new Viewpoint(56.13, 8.98, 100000);
-
-		map.ReferenceScale = 100000;
+			ReferenceScale = 100000
+		};
 		return map;
 	}
 
+	// Opretter et nyt lag til grafik på kortet som bruges til at vise symboler
 	public static GraphicsOverlay InitGraphicsOverlay()
 	{
 		var symboler = new GraphicsOverlay();
-		symboler.ScaleSymbols = true;
+		symboler.ScaleSymbols = true; // Grafik skalerer sammen med kortet
 
 		return symboler;
 	}
@@ -35,10 +39,9 @@ public class ArcGIS
 	public static MapPoint CreateMarker(MapPoint location)
 	{
 		return new MapPoint(location.X, location.Y, location.SpatialReference);
-
-
 	}
 
+	// Opretter nyt symbol med de valgte egenskaber 
 	public static SimpleMarkerSymbol CreateSymbol(SimpleMarkerSymbolStyle style, Color color, double size)
 	{
 		var symbol = new SimpleMarkerSymbol
