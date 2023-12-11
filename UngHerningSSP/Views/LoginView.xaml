@@ -69,6 +69,7 @@
 					Background="CornflowerBlue"
 					BorderThickness="0"
 					Click="LoginButton_Click"
+					Command="{Binding NavigateCommand}"
 					Content="Log in"
 					Cursor="Hand"
 					FontFamily="Bahnschrift"

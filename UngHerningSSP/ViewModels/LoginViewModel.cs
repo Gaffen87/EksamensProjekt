@@ -15,9 +15,11 @@ public partial class LoginViewModel : ViewModelBase
 
 	}
 
-	[ObservableProperty] 
+	[ObservableProperty]
+	[NotifyCanExecuteChangedFor(nameof(NavigateCommand))]
 	private string? username;
 	[ObservableProperty]
+	[NotifyCanExecuteChangedFor(nameof(NavigateCommand))]
 	private string? password;
 
 	public bool ValidateUser()
@@ -46,5 +48,15 @@ public partial class LoginViewModel : ViewModelBase
 		}
 
 		return result;
+	}
+
+	[RelayCommand(CanExecute = (nameof(CanNavigate)))]
+	public void Navigate()
+	{
+
+	}
+	private bool CanNavigate()
+	{
+		return Username != null && Password!.Length > 3;
 	}
 }
