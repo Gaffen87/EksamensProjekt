@@ -42,12 +42,27 @@ public class ArcGIS
 	}
 
 	// Opretter nyt symbol med de valgte egenskaber 
-	public static SimpleMarkerSymbol CreateSymbol(SimpleMarkerSymbolStyle style, Color color, double size)
+	public static SimpleMarkerSymbol CreateSymbol(SimpleMarkerSymbolStyle style, string color, double size)
 	{
+		Color symbolColor = Color.Red;
+
+		switch (color)
+		{
+			case "Rød":
+				symbolColor = Color.Red;
+				break;
+			case "Gul":
+				symbolColor = Color.Yellow;
+				break;
+			case "Grøn":
+				symbolColor = Color.Green; 
+				break;
+		}
+
 		var symbol = new SimpleMarkerSymbol
 		{
 			Style = style,
-			Color = Color.FromArgb(50, color),
+			Color = Color.FromArgb(100, symbolColor),
 			Size = size
 		};
 

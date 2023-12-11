@@ -32,7 +32,7 @@ public partial class UserMapViewModel : ViewModelBase
         User user = userRepo.Retrieve(2);
         Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint), Longitude = Location.GetLongitude(CurrentMapPoint) };
         location.ID = locationRepo.InsertLocation(location);
-        Hotspot hotspot = new() { Title = HotspotTitle, Priority = "Rød", Location = location, User = user };
+        Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor, Location = location, User = user };
         hotspotRepo.InsertHotspot(hotspot, user, location);
 
         Hotspots.Add(hotspot);
@@ -56,6 +56,22 @@ public partial class UserMapViewModel : ViewModelBase
     private string hotspotTitle = "Nyt Hotspot";
     [ObservableProperty]
     private string? hotspotColor;
+    
+    partial void OnHotspotColorChanged(string? value)
+    {
+        switch (value)
+        {
+            case "Rød":
+                CurrentPoint!.Color = Color.FromArgb(100, Color.Red);
+                break;
+            case "Gul":
+                CurrentPoint!.Color = Color.FromArgb(100, Color.Yellow);
+                break;
+            case "Grøn":
+                CurrentPoint!.Color = Color.FromArgb(100, Color.Green);
+                break;
+        }
+    }
 
     public List<string> Colors { get; set; } = new() {"Rød", "Gul", "Grøn" };
 
@@ -74,7 +90,7 @@ public partial class UserMapViewModel : ViewModelBase
     {
         CurrentMapPoint = ArcGIS.CreateMarker(location);
 
-        CurrentPoint = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, Color.Red, Size);
+        CurrentPoint = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, HotspotColor, Size);
 
         CurrentGraphic = new Graphic(CurrentMapPoint, CurrentPoint);
 
