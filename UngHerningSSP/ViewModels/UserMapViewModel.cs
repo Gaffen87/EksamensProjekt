@@ -27,15 +27,22 @@ public partial class UserMapViewModel : ViewModelBase
 
     public ObservableCollection<Hotspot> Hotspots { get; set; }
 
+    [RelayCommand(CanExecute = nameof(CanCreate))]
     public void CreateHotspot()
     {
         User user = userRepo.Retrieve(2);
-        Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint), Longitude = Location.GetLongitude(CurrentMapPoint) };
+        Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint!), Longitude = Location.GetLongitude(CurrentMapPoint!) };
         location.ID = locationRepo.InsertLocation(location);
-        Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor, Location = location, User = user };
+        Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = location, User = user };
         hotspotRepo.InsertHotspot(hotspot, user, location);
 
         Hotspots.Add(hotspot);
+    }
+
+    
+    private bool CanCreate()
+    {
+        return HotspotColor != null && HotspotTitle != string.Empty && HotspotTitle != "Nyt Hotspot";
     }
 
     [ObservableProperty]
@@ -53,8 +60,10 @@ public partial class UserMapViewModel : ViewModelBase
     [ObservableProperty]
     private double size = 10;
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string hotspotTitle = "Nyt Hotspot";
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
     
     partial void OnHotspotColorChanged(string? value)
@@ -90,7 +99,7 @@ public partial class UserMapViewModel : ViewModelBase
     {
         CurrentMapPoint = ArcGIS.CreateMarker(location);
 
-        CurrentPoint = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, HotspotColor, Size);
+        CurrentPoint = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, HotspotColor!, Size);
 
         CurrentGraphic = new Graphic(CurrentMapPoint, CurrentPoint);
 

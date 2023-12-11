@@ -35,7 +35,6 @@ public partial class UserMapView : Page
 
 	private void btSave_Click(object sender, RoutedEventArgs e)
 	{
-		viewModel.CreateHotspot();
 		MarkerControl.Visibility = Visibility.Collapsed;
 	}
 

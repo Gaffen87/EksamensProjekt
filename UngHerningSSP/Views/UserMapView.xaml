@@ -14,16 +14,21 @@
 	Background="White"
 	mc:Ignorable="d">
 
-	<Grid>
+    <Page.Resources>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="5 0 5 0"/>
+        </Style>
+    </Page.Resources>
+    <Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
 			<ColumnDefinition Width="4.5*" />
 		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="40" />
-			<RowDefinition />
-		</Grid.RowDefinitions>
-		<Label
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label
 			HorizontalContentAlignment="Center"
 			Background="Gray"
 			Content="Hotspots"
@@ -70,7 +75,7 @@
 			Grid.RowSpan="2"
 			Grid.Column="1"
 			Width="200"
-			Height="220"
+			Height="400"
 			Margin="0,0,300,0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Center"
@@ -142,22 +147,39 @@
 				</ComboBox.ItemTemplate>
 
 			</ComboBox>
-			<WrapPanel HorizontalAlignment="Center">
-				<Button
+            <StackPanel HorizontalAlignment="Center">
+                <WrapPanel HorizontalAlignment="Center" Margin="0 5 0 10">
+                    <CheckBox Content="Man" Padding="1 0 0 0"/>
+                    <CheckBox Content="Tir" Padding="1 0 0 0"/>
+                    <CheckBox Content="Ons" Padding="1 0 0 0"/>
+                    <CheckBox Content="Tor" Padding="1 0 0 0"/>
+                </WrapPanel>
+                <WrapPanel HorizontalAlignment="Center">
+                    <CheckBox Content="Fre" Padding="1 0 0 0"/>
+                    <CheckBox Content="Lør" Padding="1 0 0 0"/>
+                    <CheckBox Content="Søn" Padding="1 0 0 0"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <!-- HER SKAL VÆRE TIDSPICKER HALLØJ -->
+                </WrapPanel>
+            </StackPanel>
+            <WrapPanel HorizontalAlignment="Center">
+                <Button
 					x:Name="btSave"
 					Width="50"
 					Margin="10"
 					Click="btSave_Click"
+                    Command="{Binding CreateHotspotCommand}"
 					Content="Gem" />
-				<Button
+                <Button
 					x:Name="btCancel"
 					Width="50"
 					Margin="10"
 					Click="btCancel_Click"
 					Command="{Binding DeletePointCommand}"
 					Content="Fortryd" />
-			</WrapPanel>
-		</StackPanel>
+            </WrapPanel>
+        </StackPanel>
 		<esri:MapView
 			x:Name="MapView"
 			Grid.RowSpan="2"
