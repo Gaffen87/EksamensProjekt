@@ -10,7 +10,7 @@ public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
-        CurrentViewModel = new LoginViewModel(this);
+        currentViewModel = new LoginViewModel();
     }
 
     [ObservableProperty]

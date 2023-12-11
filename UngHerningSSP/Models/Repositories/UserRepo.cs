@@ -20,9 +20,14 @@ public class UserRepo : IRepository<User>
 		return dbAccess.SaveDataAndReturnID("spInsertUser", new { user.FirstName, user.LastName, user.UserName, user.Password, user.IsAdmin });
 	}
 
-	public User Retrieve(int id) 
+	public User Retrieve(int id)
 	{
 		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { UserID = id });
+	}
+
+	public User Retrieve(string username, string password) 
+	{
+		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { UserName = username, Password = password });
 	}
 
 	public IEnumerable<User> RetrieveAll()
