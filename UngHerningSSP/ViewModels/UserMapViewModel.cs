@@ -57,7 +57,7 @@ public partial class UserMapViewModel : ViewModelBase
     [ObservableProperty]
     private string? hotspotColor;
 
-    public List<string> Colors { get; set; } = new() { "-- Vælg Prioritet --", "Rød", "Gul", "Grøn" };
+    public List<string> Colors { get; set; } = new() {"Rød", "Gul", "Grøn" };
 
     private void Initialize()
     {
