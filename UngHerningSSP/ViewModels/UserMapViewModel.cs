@@ -7,6 +7,7 @@ using Esri.ArcGISRuntime.UI;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 using UngHerningSSP.Services;
@@ -38,7 +39,6 @@ public partial class UserMapViewModel : ViewModelBase
 
         Hotspots.Add(hotspot);
     }
-
     
     private bool CanCreate()
     {
@@ -111,4 +111,13 @@ public partial class UserMapViewModel : ViewModelBase
     {
         Symboler!.Graphics.Remove(CurrentGraphic!);
     }
+
+    // Til TimePicker i Opret Hotspot
+    [ObservableProperty]
+    private string? hour;
+    [ObservableProperty]
+    private string? minute;
+
+    public int[] Hours { get; set; } = Enumerable.Range(0, 24).ToArray();
+    public int[] Minutes { get; set; } = Enumerable.Range(0, 59).Where(x => x % 5 == 0).ToArray();
 }
