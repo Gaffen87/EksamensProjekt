@@ -25,14 +25,14 @@ public class UserRepo : IRepository<User>
 		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { UserID = id });
 	}
 
-	public User Retrieve(string username, string password) 
+	public User Retrieve(string username, string password)
 	{
 		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { UserName = username, Password = password });
 	}
 
 	public IEnumerable<User> RetrieveAll()
 	{
-		return dbAccess.LoadMultiple<User, dynamic>("spRetrieveAllUsers", new {  });
+		return dbAccess.LoadMultiple<User>("spRetrieveAllUsers");
 	}
 
 	public IEnumerable<User> RetrieveAll(bool isAdmin)
