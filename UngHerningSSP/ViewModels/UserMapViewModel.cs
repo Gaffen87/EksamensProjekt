@@ -5,9 +5,7 @@ using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.UI;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Drawing;
-using System.Windows.Forms;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 using UngHerningSSP.Services;
@@ -22,28 +20,12 @@ public partial class UserMapViewModel : ViewModelBase
     {
         Hotspots = new(hotspotRepo.RetrieveAllHotspots());
         Initialize();
-
-		CreateNewPoint(new MapPoint(8.98, 56.13, SpatialReferences.Wgs84));
+        PopulateMap();
 	}
 
     public ObservableCollection<Hotspot> Hotspots { get; set; }
 
-    [RelayCommand(CanExecute = nameof(CanCreate))]
-    public void CreateHotspot()
-    {
-        User user = userRepo.Retrieve(int.Parse(App.config.GetSection("UserSettings").GetSection("UserID").Value));
-        Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint!), Longitude = Location.GetLongitude(CurrentMapPoint!) };
-        location.ID = locationRepo.InsertLocation(location);
-        Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = location, User = user };
-        hotspotRepo.InsertHotspot(hotspot, user, location);
-
-        Hotspots.Add(hotspot);
-    }
-    
-    private bool CanCreate()
-    {
-        return HotspotColor != null && HotspotTitle != string.Empty && HotspotTitle != "Nyt Hotspot";
-    }
+    public List<string> Colors { get; set; } = new() {"Rød", "Gul", "Grøn" };
 
     [ObservableProperty]
 	private Map? map;
@@ -65,7 +47,7 @@ public partial class UserMapViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
-    
+ 
     partial void OnHotspotColorChanged(string? value)
     {
         switch (value)
@@ -81,8 +63,30 @@ public partial class UserMapViewModel : ViewModelBase
                 break;
         }
     }
+    [RelayCommand(CanExecute = nameof(CanCreate))]
+    public void CreateHotspot()
+    {
+        Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = ClickedLocation(), User = CurrentUser() };
+        hotspotRepo.InsertHotspot(hotspot, CurrentUser(), ClickedLocation());
 
-    public List<string> Colors { get; set; } = new() {"Rød", "Gul", "Grøn" };
+        Hotspots.Add(hotspot);
+    }
+    private bool CanCreate()
+    {
+        return HotspotColor != null && HotspotTitle != string.Empty && HotspotTitle != "Nyt Hotspot";
+    }
+
+    private User CurrentUser()
+    {
+		return userRepo.Retrieve(int.Parse(App.config.GetSection("UserSettings").GetSection("UserID").Value!));
+	}
+
+    private Location ClickedLocation()
+    {
+		Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint!), Longitude = Location.GetLongitude(CurrentMapPoint!) };
+		location.ID = locationRepo.InsertLocation(location);
+        return location;
+	}
 
     private void Initialize()
     {
@@ -92,7 +96,6 @@ public partial class UserMapViewModel : ViewModelBase
 		{
 			Symboler
 		};
-
     }
 
     public void CreateNewPoint(MapPoint location)
@@ -105,6 +108,16 @@ public partial class UserMapViewModel : ViewModelBase
 
         Symboler!.Graphics.Add(CurrentGraphic);
 	}
+
+    private void PopulateMap() 
+    {
+        foreach (Hotspot hotspot in Hotspots)
+        {
+            var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, hotspot.Priority, Size);
+			MapPoint location = new(hotspot.Location.Longitude, hotspot.Location.Latitude, SpatialReferences.Wgs84);
+            Symboler!.Graphics.Add(new Graphic(location, symbol));
+        }
+    }
 
     [RelayCommand]
     public void DeletePoint()
