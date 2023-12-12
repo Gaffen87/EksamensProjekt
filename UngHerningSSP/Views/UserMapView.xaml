@@ -20,10 +20,10 @@
         </Style>
     </Page.Resources>
     <Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
-			<ColumnDefinition Width="4.5*" />
-		</Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="4.5*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition />
@@ -34,48 +34,48 @@
 			Content="Hotspots"
 			FontSize="18"
 			FontWeight="Bold" />
-		<ListView
+        <ListView
 			Grid.Row="1"
 			d:ItemsSource="{d:SampleData}"
 			Cursor="Hand"
 			ItemsSource="{Binding Hotspots}"
 			ScrollViewer.VerticalScrollBarVisibility="Visible"
 			SelectionMode="Single">
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<Grid Margin="0,5,0,5">
-						<StackPanel>
-							<TextBlock Text="{Binding Title}" />
-							<Rectangle Width="10" Height="10" Stroke="Black" StrokeThickness="0.5">
-								<Rectangle.Style>
-									<Style TargetType="Rectangle">
-										<Style.Triggers>
-											<DataTrigger Binding="{Binding Priority}" Value="Rød">
-												<Setter Property="Fill" Value="Red" />
-											</DataTrigger>
-											<DataTrigger Binding="{Binding Priority}" Value="Gul">
-												<Setter Property="Fill" Value="Yellow" />
-											</DataTrigger>
-											<DataTrigger Binding="{Binding Priority}" Value="Grøn">
-												<Setter Property="Fill" Value="Green" />
-											</DataTrigger>
-										</Style.Triggers>
-									</Style>
-								</Rectangle.Style>
-							</Rectangle>
-							<TextBlock Text="{Binding Location.Longitude}" />
-							<TextBlock Text="{Binding Location.Latitude}" />
-						</StackPanel>
-					</Grid>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
-		<StackPanel
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,5,0,5">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Title}" />
+                            <Rectangle Width="10" Height="10" Stroke="Black" StrokeThickness="0.5">
+                                <Rectangle.Style>
+                                    <Style TargetType="Rectangle">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Priority}" Value="Rød">
+                                                <Setter Property="Fill" Value="Red" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Priority}" Value="Gul">
+                                                <Setter Property="Fill" Value="Yellow" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Priority}" Value="Grøn">
+                                                <Setter Property="Fill" Value="Green" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Rectangle.Style>
+                            </Rectangle>
+                            <TextBlock Text="{Binding Location.Longitude}" />
+                            <TextBlock Text="{Binding Location.Latitude}" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackPanel
 			x:Name="MarkerControl"
 			Grid.RowSpan="2"
 			Grid.Column="1"
 			Width="200"
-			Height="400"
+			Height="290"
 			Margin="0,0,300,0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Center"
@@ -83,20 +83,20 @@
 			d:Visibility="Visible"
 			Background="White"
 			Visibility="Collapsed">
-			<StackPanel.BitmapEffect>
-				<DropShadowBitmapEffect />
-			</StackPanel.BitmapEffect>
-			<Label
+            <StackPanel.BitmapEffect>
+                <DropShadowBitmapEffect />
+            </StackPanel.BitmapEffect>
+            <Label
 				HorizontalContentAlignment="Center"
 				Background="Aqua"
 				Content="Opret hotspot" />
-			<TextBox
+            <TextBox
 				Width="150"
 				Margin="10"
 				HorizontalContentAlignment="Center"
 				Text="{Binding HotspotTitle, UpdateSourceTrigger=PropertyChanged}" />
-			<Label Content="Størrelse:" />
-			<Slider
+            <Label Content="Størrelse:" />
+            <Slider
 				x:Name="slider"
 				Margin="5,-3,5,5"
 				LargeChange="10"
@@ -111,42 +111,42 @@
 				ItemsSource="{Binding Colors}"
 				
 				SelectedItem="{Binding HotspotColor, UpdateSourceTrigger=PropertyChanged}">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<WrapPanel>
-							<Rectangle
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+                            <Rectangle
 								Width="10"
 								Height="10"
 								Margin="10,0,10,0">
-                                
-								<Rectangle.Style>
-									<Style TargetType="Rectangle">
-										<Style.Triggers>
-											<DataTrigger Binding="{Binding .}" Value="Rød">
-												<Setter Property="Fill" Value="Red" />
-												<Setter Property="Stroke" Value="Black" />
-												<Setter Property="StrokeThickness" Value="0.5" />
-											</DataTrigger>
-											<DataTrigger Binding="{Binding .}" Value="Gul">
-												<Setter Property="Fill" Value="Yellow" />
-												<Setter Property="Stroke" Value="Black" />
-												<Setter Property="StrokeThickness" Value="0.5" />
-											</DataTrigger>
-											<DataTrigger Binding="{Binding .}" Value="Grøn">
-												<Setter Property="Fill" Value="Green" />
-												<Setter Property="Stroke" Value="Black" />
-												<Setter Property="StrokeThickness" Value="0.5" />
-											</DataTrigger>
-										</Style.Triggers>
-									</Style>
-								</Rectangle.Style>
-							</Rectangle>
-							<TextBlock Text="{Binding .}" />
-						</WrapPanel>
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
 
-			</ComboBox>
+                                <Rectangle.Style>
+                                    <Style TargetType="Rectangle">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding .}" Value="Rød">
+                                                <Setter Property="Fill" Value="Red" />
+                                                <Setter Property="Stroke" Value="Black" />
+                                                <Setter Property="StrokeThickness" Value="0.5" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding .}" Value="Gul">
+                                                <Setter Property="Fill" Value="Yellow" />
+                                                <Setter Property="Stroke" Value="Black" />
+                                                <Setter Property="StrokeThickness" Value="0.5" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding .}" Value="Grøn">
+                                                <Setter Property="Fill" Value="Green" />
+                                                <Setter Property="Stroke" Value="Black" />
+                                                <Setter Property="StrokeThickness" Value="0.5" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Rectangle.Style>
+                            </Rectangle>
+                            <TextBlock Text="{Binding .}" />
+                        </WrapPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+
+            </ComboBox>
             <StackPanel HorizontalAlignment="Center">
                 <WrapPanel HorizontalAlignment="Center" Margin="0 5 0 10">
                     <CheckBox Content="Man" Padding="1 0 0 0"/>
@@ -159,8 +159,35 @@
                     <CheckBox Content="Lør" Padding="1 0 0 0"/>
                     <CheckBox Content="Søn" Padding="1 0 0 0"/>
                 </WrapPanel>
+                <!-- TimePicker -->
                 <WrapPanel>
-                    <!-- HER SKAL VÆRE TIDSPICKER HALLØJ -->
+                    <Label
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="25 0 0 3"
+                        Content="Time:"/>
+                    <Label
+                        VerticalAlignment="Center"
+                        Margin="32 0 0 3"
+                        Content="Minut:"/>
+                </WrapPanel>
+                <WrapPanel Margin= "0 -7 0 0">
+                    <ComboBox 
+                        Width="50"
+                        Height="20"
+                        Margin="30 0 0 0" 
+                        ItemsSource="{Binding Hours}"
+                        SelectedItem="{Binding Hour, UpdateSourceTrigger=PropertyChanged}">
+                    </ComboBox>
+
+                    <ComboBox 
+                        Width="50"
+                        Height="20"
+                        Margin="20 0 0 0" 
+                        ItemsSource="{Binding Minutes}"
+                        SelectedItem="{Binding Minute, UpdateSourceTrigger=PropertyChanged}">
+                    </ComboBox>
+                    <!-- TimePicker -->
                 </WrapPanel>
             </StackPanel>
             <WrapPanel HorizontalAlignment="Center">
@@ -180,13 +207,11 @@
 					Content="Fortryd" />
             </WrapPanel>
         </StackPanel>
-		<esri:MapView
+        <esri:MapView
 			x:Name="MapView"
-			Grid.RowSpan="2"
-			Grid.Column="1"
 			GeoViewTapped="MapView_GeoViewTapped"
 			GraphicsOverlays="{Binding GraphicsOverlays}"
-			Map="{Binding Map}" />
+			Map="{Binding Map}" Grid.ColumnSpan="2" Margin="339,80,10,-120" Grid.Row="1" />
 
-	</Grid>
+    </Grid>
 </Page>
