@@ -22,7 +22,7 @@ public class UserRepo : IRepository<User>
 
 	public User Retrieve(int id)
 	{
-		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { UserID = id });
+		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUserByID", new { UserID = id });
 	}
 
 	public User Retrieve(string username, string password)

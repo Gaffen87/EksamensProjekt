@@ -211,7 +211,7 @@
 			x:Name="MapView"
 			GeoViewTapped="MapView_GeoViewTapped"
 			GraphicsOverlays="{Binding GraphicsOverlays}"
-			Map="{Binding Map}" Grid.ColumnSpan="2" Margin="339,80,10,-120" Grid.Row="1" />
+			Map="{Binding Map}" Grid.Column="1" Grid.RowSpan="2" />
 
     </Grid>
 </Page>

@@ -31,7 +31,7 @@ public partial class UserMapViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanCreate))]
     public void CreateHotspot()
     {
-        User user = userRepo.Retrieve(2);
+        User user = userRepo.Retrieve(int.Parse(App.config.GetSection("UserSettings").GetSection("UserID").Value));
         Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint!), Longitude = Location.GetLongitude(CurrentMapPoint!) };
         location.ID = locationRepo.InsertLocation(location);
         Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = location, User = user };

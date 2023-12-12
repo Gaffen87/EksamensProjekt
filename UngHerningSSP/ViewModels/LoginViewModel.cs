@@ -37,6 +37,7 @@ public partial class LoginViewModel : ViewModelBase
 				}
 
 				App.config.GetSection("UserSettings").GetSection("Name").Value = $"{user.FirstName} {user.LastName}";
+				App.config.GetSection("UserSettings").GetSection("UserID").Value = user.ID.ToString();
 				result = true;
 				MessageBox.Show($"Logget ind som {App.config.GetSection("UserSettings").GetSection("Name").Value}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
@@ -57,6 +58,6 @@ public partial class LoginViewModel : ViewModelBase
 	}
 	private bool CanNavigate()
 	{
-		return Username != null && Password!.Length > 3;
+		return Username != null && Password != null;
 	}
 }
