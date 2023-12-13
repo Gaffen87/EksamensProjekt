@@ -11,8 +11,6 @@ public class Schedule
 
     public string DayOfWeek { get; set; }
 
-    public bool IsVisible { get; set; }
-
     public TimeOnly StartTime { get; set; }
 
     public TimeOnly EndTime { get; set; }

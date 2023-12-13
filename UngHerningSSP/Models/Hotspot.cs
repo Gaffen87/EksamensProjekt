@@ -17,5 +17,5 @@ public class Hotspot
 
     public User User { get; set; }
 
-    public Schedule[] Schedules { get; set; }
+    public List<Schedule> Schedules { get; set; }
 }

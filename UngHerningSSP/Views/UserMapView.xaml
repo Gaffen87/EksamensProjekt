@@ -15,68 +15,72 @@
 	Background="White"
 	mc:Ignorable="d">
 
-    <Page.Resources>
-        <Style TargetType="CheckBox">
-            <Setter Property="Margin" Value="5 0 5 0"/>
-        </Style>
-    </Page.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="4.5*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Label
+	<Page.Resources>
+		<Style TargetType="CheckBox">
+			<Setter Property="Margin" Value="5,0,5,0" />
+		</Style>
+	</Page.Resources>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition Width="4.5*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="40" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Label
 			HorizontalContentAlignment="Center"
 			Background="Gray"
 			Content="Hotspots"
 			FontSize="18"
 			FontWeight="Bold" />
-        <ListView
+		<ListView
 			Grid.Row="1"
 			d:ItemsSource="{d:SampleData}"
 			Cursor="Hand"
 			ItemsSource="{Binding Hotspots}"
 			ScrollViewer.VerticalScrollBarVisibility="Visible"
 			SelectionMode="Single">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,5,0,5">
-                        <StackPanel>
-                            <TextBlock Text="{Binding Title}" />
-                            <Rectangle Width="10" Height="10" Stroke="Black" StrokeThickness="0.5">
-                                <Rectangle.Style>
-                                    <Style TargetType="Rectangle">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Priority}" Value="Rød">
-                                                <Setter Property="Fill" Value="Red" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Priority}" Value="Gul">
-                                                <Setter Property="Fill" Value="Yellow" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Priority}" Value="Grøn">
-                                                <Setter Property="Fill" Value="Green" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Rectangle.Style>
-                            </Rectangle>
-                            <TextBlock Text="{Binding Location.Longitude}" />
-                            <TextBlock Text="{Binding Location.Latitude}" />
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <StackPanel
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<Grid Margin="0,5,0,5">
+						<StackPanel>
+							<TextBlock Text="{Binding Title}" />
+							<Rectangle
+								Width="10"
+								Height="10"
+								Stroke="Black"
+								StrokeThickness="0.5">
+								<Rectangle.Style>
+									<Style TargetType="Rectangle">
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding Priority}" Value="Rød">
+												<Setter Property="Fill" Value="Red" />
+											</DataTrigger>
+											<DataTrigger Binding="{Binding Priority}" Value="Gul">
+												<Setter Property="Fill" Value="Yellow" />
+											</DataTrigger>
+											<DataTrigger Binding="{Binding Priority}" Value="Grøn">
+												<Setter Property="Fill" Value="Green" />
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Rectangle.Style>
+							</Rectangle>
+							<TextBlock Text="{Binding Location.Longitude}" />
+							<TextBlock Text="{Binding Location.Latitude}" />
+						</StackPanel>
+					</Grid>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+		<StackPanel
 			x:Name="MarkerControl"
 			Grid.RowSpan="2"
 			Grid.Column="1"
 			Width="200"
-			Height="290"
+			Height="320"
 			Margin="0,0,300,0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Center"
@@ -84,20 +88,20 @@
 			d:Visibility="Visible"
 			Background="White"
 			Visibility="Collapsed">
-            <StackPanel.BitmapEffect>
-                <DropShadowBitmapEffect />
-            </StackPanel.BitmapEffect>
-            <Label
+			<StackPanel.BitmapEffect>
+				<DropShadowBitmapEffect />
+			</StackPanel.BitmapEffect>
+			<Label
 				HorizontalContentAlignment="Center"
 				Background="Aqua"
 				Content="Opret hotspot" />
-            <TextBox
+			<TextBox
 				Width="150"
 				Margin="10"
 				HorizontalContentAlignment="Center"
 				Text="{Binding HotspotTitle, UpdateSourceTrigger=PropertyChanged}" />
-            <Label Content="Størrelse:" />
-            <Slider
+			<Label Content="Størrelse:" />
+			<Slider
 				x:Name="slider"
 				Margin="5,-3,5,5"
 				LargeChange="10"
@@ -105,115 +109,128 @@
 				Minimum="1"
 				TickFrequency="2"
 				Value="{Binding CurrentPoint.Size}" />
-            <Label Content="Prioritet:" Margin="0 0 0 -7" />
-            <ComboBox
+			<Label Margin="0,0,0,-7" Content="Prioritet:" />
+			<ComboBox
 				Margin="5"
 				d:IsDropDownOpen="True"
 				ItemsSource="{Binding Colors}"
-				
 				SelectedItem="{Binding HotspotColor, UpdateSourceTrigger=PropertyChanged}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <WrapPanel>
-                            <Rectangle
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<WrapPanel>
+							<Rectangle
 								Width="10"
 								Height="10"
 								Margin="10,0,10,0">
 
-                                <Rectangle.Style>
-                                    <Style TargetType="Rectangle">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding .}" Value="Rød">
-                                                <Setter Property="Fill" Value="Red" />
-                                                <Setter Property="Stroke" Value="Black" />
-                                                <Setter Property="StrokeThickness" Value="0.5" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding .}" Value="Gul">
-                                                <Setter Property="Fill" Value="Yellow" />
-                                                <Setter Property="Stroke" Value="Black" />
-                                                <Setter Property="StrokeThickness" Value="0.5" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding .}" Value="Grøn">
-                                                <Setter Property="Fill" Value="Green" />
-                                                <Setter Property="Stroke" Value="Black" />
-                                                <Setter Property="StrokeThickness" Value="0.5" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Rectangle.Style>
-                            </Rectangle>
-                            <TextBlock Text="{Binding .}" />
-                        </WrapPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+								<Rectangle.Style>
+									<Style TargetType="Rectangle">
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding .}" Value="Rød">
+												<Setter Property="Fill" Value="Red" />
+												<Setter Property="Stroke" Value="Black" />
+												<Setter Property="StrokeThickness" Value="0.5" />
+											</DataTrigger>
+											<DataTrigger Binding="{Binding .}" Value="Gul">
+												<Setter Property="Fill" Value="Yellow" />
+												<Setter Property="Stroke" Value="Black" />
+												<Setter Property="StrokeThickness" Value="0.5" />
+											</DataTrigger>
+											<DataTrigger Binding="{Binding .}" Value="Grøn">
+												<Setter Property="Fill" Value="Green" />
+												<Setter Property="Stroke" Value="Black" />
+												<Setter Property="StrokeThickness" Value="0.5" />
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Rectangle.Style>
+							</Rectangle>
+							<TextBlock Text="{Binding .}" />
+						</WrapPanel>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
 
-            </ComboBox>
-            <StackPanel HorizontalAlignment="Center">
-                <WrapPanel HorizontalAlignment="Center" Margin="0 5 0 10">
-                    <CheckBox Content="Man" Padding="1 0 0 0"/>
-                    <CheckBox Content="Tir" Padding="1 0 0 0"/>
-                    <CheckBox Content="Ons" Padding="1 0 0 0"/>
-                    <CheckBox Content="Tor" Padding="1 0 0 0"/>
-                </WrapPanel>
-                <WrapPanel HorizontalAlignment="Center">
-                    <CheckBox Content="Fre" Padding="1 0 0 0"/>
-                    <CheckBox Content="Lør" Padding="1 0 0 0"/>
-                    <CheckBox Content="Søn" Padding="1 0 0 0"/>
-                </WrapPanel>
-                <!-- TimePicker -->
-                <WrapPanel>
-                    <Label
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Left"
-                        Margin="25 0 0 3"
-                        Content="Time:"/>
-                    <Label
-                        VerticalAlignment="Center"
-                        Margin="32 0 0 3"
-                        Content="Minut:"/>
-                </WrapPanel>
-                <WrapPanel Margin= "0 -7 0 0">
-                    <ComboBox 
-                        Width="50"
-                        Height="20"
-                        Margin="30 0 0 0" 
-                        ItemsSource="{Binding Hours}"
-                        SelectedItem="{Binding Hour, UpdateSourceTrigger=PropertyChanged}">
-                    </ComboBox>
-
-                    <ComboBox 
-                        Width="50"
-                        Height="20"
-                        Margin="20 0 0 0" 
-                        ItemsSource="{Binding Minutes}"
-                        SelectedItem="{Binding Minute, UpdateSourceTrigger=PropertyChanged}">
-                    </ComboBox>
-					<ex:TimePicker Format="ShortTime"></ex:TimePicker>
-                    <!-- TimePicker -->
-                </WrapPanel>
-            </StackPanel>
-            <WrapPanel HorizontalAlignment="Center">
-                <Button
+			</ComboBox>
+			<StackPanel HorizontalAlignment="Center">
+				<WrapPanel Margin="0,5,0,10" HorizontalAlignment="Center">
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Man"
+						IsChecked="{Binding SelectedDays[Monday]}" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Tir"
+						IsChecked="{Binding SelectedDays[Tuesday]}" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Ons"
+						IsChecked="{Binding SelectedDays[Wednesday]}" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Tor"
+						IsChecked="{Binding SelectedDays[Thursday]}" />
+				</WrapPanel>
+				<WrapPanel HorizontalAlignment="Center">
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Fre"
+						IsChecked="{Binding SelectedDays[Friday]}" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Lør"
+						IsChecked="{Binding SelectedDays[Saturday]}" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Søn"
+						IsChecked="{Binding SelectedDays[Sunday]}" />
+				</WrapPanel>
+				<!--  TimePicker  -->
+				<WrapPanel Margin="0,10,5,0" HorizontalAlignment="Right">
+					<Label Content="Start tidspunkt:" />
+					<ex:TimePicker
+						Width="83"
+						AllowTextInput="False"
+						Format="ShortTime"
+						ShowButtonSpinner="False"
+						Text="{Binding StartTime}"
+						TimeInterval="0:30" />
+				</WrapPanel>
+				<WrapPanel Margin="0,0,5,0" HorizontalAlignment="Right">
+					<Label Content="Slut tidspunkt:" />
+					<ex:TimePicker
+						Width="83"
+						AllowTextInput="False"
+						Format="ShortTime"
+						ShowButtonSpinner="False"
+						Text="{Binding EndTime}"
+						TimeInterval="0:30" />
+					<!--  TimePicker  -->
+				</WrapPanel>
+			</StackPanel>
+			<WrapPanel Margin="0,10,0,0" HorizontalAlignment="Center">
+				<Button
 					x:Name="btSave"
 					Width="50"
 					Margin="10"
 					Click="btSave_Click"
-                    Command="{Binding CreateHotspotCommand}"
+					Command="{Binding CreateHotspotCommand}"
 					Content="Gem" />
-                <Button
+				<Button
 					x:Name="btCancel"
 					Width="50"
 					Margin="10"
 					Click="btCancel_Click"
 					Command="{Binding DeletePointCommand}"
 					Content="Fortryd" />
-            </WrapPanel>
-        </StackPanel>
-        <esri:MapView
+			</WrapPanel>
+		</StackPanel>
+		<esri:MapView
 			x:Name="MapView"
+			Grid.RowSpan="2"
+			Grid.Column="1"
 			GeoViewTapped="MapView_GeoViewTapped"
 			GraphicsOverlays="{Binding GraphicsOverlays}"
-			Map="{Binding Map}" Grid.Column="1" Grid.RowSpan="2" />
+			Map="{Binding Map}" />
 
-    </Grid>
+	</Grid>
 </Page>

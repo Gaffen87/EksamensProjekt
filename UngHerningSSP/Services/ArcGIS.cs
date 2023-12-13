@@ -55,7 +55,7 @@ public class ArcGIS
 				symbolColor = Color.Yellow;
 				break;
 			case "Grøn":
-				symbolColor = Color.Green; 
+				symbolColor = Color.LightGreen; 
 				break;
 		}
 
