@@ -23,7 +23,6 @@ public partial class UserMapView : Page
 			if (MarkerControl.Visibility == Visibility.Collapsed)
 			{
 				MarkerControl.Visibility = Visibility.Visible;
-				//MapPoint p = e.Location!;
 				viewModel.CreateNewPoint(e.Location!);
 			}
 			else

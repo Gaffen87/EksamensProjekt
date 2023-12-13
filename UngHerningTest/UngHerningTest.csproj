@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Esri.ArcGISRuntime.WPF" Version="200.2.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />

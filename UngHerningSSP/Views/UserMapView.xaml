@@ -4,6 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
+	xmlns:ex="http://schemas.xceed.com/wpf/xaml/toolkit"
 	xmlns:local="clr-namespace:UngHerningSSP.Views"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewmodel="clr-namespace:UngHerningSSP.ViewModels"
@@ -187,6 +188,7 @@
                         ItemsSource="{Binding Minutes}"
                         SelectedItem="{Binding Minute, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
+					<ex:TimePicker Format="ShortTime"></ex:TimePicker>
                     <!-- TimePicker -->
                 </WrapPanel>
             </StackPanel>
