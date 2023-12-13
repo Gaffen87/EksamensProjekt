@@ -78,7 +78,7 @@ public partial class UserMapViewModel : ViewModelBase
 
     private User CurrentUser()
     {
-		return userRepo.Retrieve(int.Parse(App.config.GetSection("UserSettings").GetSection("UserID").Value!));
+		return userRepo.Retrieve(int.Parse(App.config.GetSection("CurrentUser").GetSection("UserID").Value!));
 	}
 
     private Location ClickedLocation()

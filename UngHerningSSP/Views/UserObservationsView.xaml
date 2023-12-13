@@ -1,164 +1,174 @@
-﻿<Page x:Class="UngHerningSSP.Views.UserObservationsView"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:UngHerningSSP.Views"
-      xmlns:viewmodel="clr-namespace:UngHerningSSP.ViewModels"
-      mc:Ignorable="d" 
-      d:DataContext="{d:DesignInstance Type=viewmodel:UserObservationsViewModel}"
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="UserObservationsView">
+﻿<Page
+	x:Class="UngHerningSSP.Views.UserObservationsView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:UngHerningSSP.Views"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewmodel="clr-namespace:UngHerningSSP.ViewModels"
+	Title="UserObservationsView"
+	d:DataContext="{d:DesignInstance Type=viewmodel:UserObservationsViewModel}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
 
-    <Grid Background="white">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="4.5*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Label
-		HorizontalContentAlignment="Center"
-		Background="Gray"
-		Content="Hændelser"
-		FontSize="18"
-		FontWeight="Bold" />
-        <ListView
-		Grid.Row="1"
-		d:ItemsSource="{d:SampleData}"
-		Cursor="Hand"
-		ItemsSource="{Binding Observations}"
-		ScrollViewer.VerticalScrollBarVisibility="Visible"
-		SelectionMode="Single">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,5,0,5">
-                        <StackPanel>
-                            <TextBlock Text="{Binding ID}" /> <!--burde vi også have en title til hændelser?-->
-                              <TextBlock Text="{Binding Date}"/>
-                            <TextBlock Text="{Binding Location}"/>
-                            <Rectangle Width="10" Height="10" Stroke="Black" StrokeThickness="0.5">
-                                <Rectangle.Style>
-                                    <Style TargetType="Rectangle">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Severity}" Value="Rød">
-                                                <Setter Property="Fill" Value="Red" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Severity}" Value="Gul">
-                                                <Setter Property="Fill" Value="Yellow" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Severity}" Value="Grøn">
-                                                <Setter Property="Fill" Value="Green" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Rectangle.Style>
-                            </Rectangle>
-                          </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <StackPanel Grid.Row="1" Grid.Column="1">
-           
-            <TextBlock
-		FontFamily="Bahnschrift"
-		FontSize="25"
-		FontWeight="Bold"
-		Foreground="#FF004AAD"
-		Text="Udviddet rapport for hændelse" 
-                HorizontalAlignment="Center"/>
+	<Grid Background="white">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition Width="4.5*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="40" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Label
+			HorizontalContentAlignment="Center"
+			Background="Gray"
+			Content="Hændelser"
+			FontSize="18"
+			FontWeight="Bold" />
+		<ListView
+			Grid.Row="1"
+			d:ItemsSource="{d:SampleData}"
+			Cursor="Hand"
+			ItemsSource="{Binding Observations}"
+			ScrollViewer.VerticalScrollBarVisibility="Visible"
+			SelectionMode="Single">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<Grid Margin="0,5,0,5">
+						<StackPanel>
+							<TextBlock Text="{Binding ID}" /> 
+							<!--  burde vi også have en title til hændelser?  -->
+							<TextBlock Text="{Binding Date}" />
+							<TextBlock Text="{Binding Location}" />
+							<Rectangle
+								Width="10"
+								Height="10"
+								Stroke="Black"
+								StrokeThickness="0.5">
+								<Rectangle.Style>
+									<Style TargetType="Rectangle">
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding Severity}" Value="Rød">
+												<Setter Property="Fill" Value="Red" />
+											</DataTrigger>
+											<DataTrigger Binding="{Binding Severity}" Value="Gul">
+												<Setter Property="Fill" Value="Yellow" />
+											</DataTrigger>
+											<DataTrigger Binding="{Binding Severity}" Value="Grøn">
+												<Setter Property="Fill" Value="Green" />
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Rectangle.Style>
+							</Rectangle>
+						</StackPanel>
+					</Grid>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+		<StackPanel Grid.Row="1" Grid.Column="1">
 
-            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock
-		Margin="0,10,0,0"
-		FontFamily="Bahnschrift"
-		FontSize="16"
-		FontWeight="Bold"
-		Foreground="#FF0A3164"
-		Text="Dato:" />
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontFamily="Bahnschrift"
+				FontSize="25"
+				FontWeight="Bold"
+				Foreground="#FF004AAD"
+				Text="Udviddet rapport for hændelse" />
 
-            <TextBlock
-Margin="0,10,0,0"
-FontFamily="Bahnschrift"
-FontSize="16"
-FontWeight="Bold"
-Foreground="#FF0A3164"
-Text="Tid:" />
-            <TextBlock
-Margin="0,10,0,0"
-FontFamily="Bahnschrift"
-FontSize="16"
-FontWeight="Bold"
-Foreground="#FF0A3164"
-Text="Alvorlighed:" />
+			<WrapPanel HorizontalAlignment="Center" Orientation="Horizontal">
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Dato:" />
 
-            </WrapPanel>
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Tid:" />
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Alvorlighed:" />
 
-            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock
-		Margin="0,10,0,0"
-		FontFamily="Bahnschrift"
-		FontSize="16"
-		FontWeight="Bold"
-		Foreground="#FF0A3164"
-		Text="Adfærd:" />
+			</WrapPanel>
 
-                <TextBlock
-Margin="0,10,0,0"
-FontFamily="Bahnschrift"
-FontSize="16"
-FontWeight="Bold"
-Foreground="#FF0A3164"
-Text="Approach:" />
-                <TextBlock
-Margin="0,10,0,0"
-FontFamily="Bahnschrift"
-FontSize="16"
-FontWeight="Bold"
-Foreground="#FF0A3164"
-Text="Mængde:" />
+			<WrapPanel HorizontalAlignment="Center" Orientation="Horizontal">
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Adfærd:" />
 
-            </WrapPanel>
-            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock
-		Margin="0,10,0,0"
-		FontFamily="Bahnschrift"
-		FontSize="16"
-		FontWeight="Bold"
-		Foreground="#FF0A3164"
-		Text="Beskrivelse:" />
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Approach:" />
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Mængde:" />
 
-                <TextBlock
-Margin="0,10,0,0"
-FontFamily="Bahnschrift"
-FontSize="16"
-FontWeight="Bold"
-Foreground="#FF0A3164"
-Text="Lokation:" />
-                <TextBlock
-Margin="0,10,0,0"
-FontFamily="Bahnschrift"
-FontSize="16"
-FontWeight="Bold"
-Foreground="#FF0A3164"
-Text="Oprettet af:" />
+			</WrapPanel>
+			<WrapPanel HorizontalAlignment="Center" Orientation="Horizontal">
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Beskrivelse:" />
 
-            </WrapPanel>
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Lokation:" />
+				<TextBlock
+					Margin="0,10,0,0"
+					FontFamily="Bahnschrift"
+					FontSize="16"
+					FontWeight="Bold"
+					Foreground="#FF0A3164"
+					Text="Oprettet af:" />
 
-            <TextBlock Text="Billede" HorizontalAlignment="Center" Margin="0,10,0,0"
-FontFamily="Bahnschrift"
-FontSize="16"
-FontWeight="Bold"
-Foreground="#FF0A3164"/>
-            <!--<Image
+			</WrapPanel>
+
+			<TextBlock
+				Margin="0,10,0,0"
+				HorizontalAlignment="Center"
+				FontFamily="Bahnschrift"
+				FontSize="16"
+				FontWeight="Bold"
+				Foreground="#FF0A3164"
+				Text="Billede" />
+			<!--<Image
 	Width="300"
 	Margin="10,10,10,10"
 	Source= billede id />-->
 
-        </StackPanel>
+		</StackPanel>
 
-    </Grid>
+	</Grid>
 </Page>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Esri.ArcGISRuntime.Mapping;
+using System.Windows;
 using System.Windows.Controls;
 using UngHerningSSP.ViewModels;
 
@@ -17,7 +18,7 @@ public partial class UserMapView : Page
 
 	private void MapView_GeoViewTapped(object sender, Esri.ArcGISRuntime.UI.Controls.GeoViewInputEventArgs e)
 	{
-		if (App.config.GetSection("UserSettings").GetSection("IsAdmin").Value == "true")
+		if (App.config.GetSection("CurrentUser").GetSection("IsAdmin").Value == "true")
 		{
 			if (MarkerControl.Visibility == Visibility.Collapsed)
 			{

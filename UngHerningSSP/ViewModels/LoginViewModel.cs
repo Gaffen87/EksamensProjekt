@@ -10,10 +10,6 @@ namespace UngHerningSSP.ViewModels;
 public partial class LoginViewModel : ViewModelBase
 {
 	UserRepo userRepo = new();
-	public LoginViewModel()
-    {
-
-	}
 
 	[ObservableProperty]
 	[NotifyCanExecuteChangedFor(nameof(NavigateCommand))]
@@ -33,13 +29,13 @@ public partial class LoginViewModel : ViewModelBase
 			{
 				if (user.IsAdmin)
 				{
-					App.config.GetSection("UserSettings").GetSection("IsAdmin").Value = "true";
+					App.config.GetSection("CurrentUser").GetSection("IsAdmin").Value = "true";
 				}
 
-				App.config.GetSection("UserSettings").GetSection("Name").Value = $"{user.FirstName} {user.LastName}";
-				App.config.GetSection("UserSettings").GetSection("UserID").Value = user.ID.ToString();
+				App.config.GetSection("CurrentUser").GetSection("Name").Value = $"{user.FirstName} {user.LastName}";
+				App.config.GetSection("CurrentUser").GetSection("UserID").Value = user.ID.ToString();
 				result = true;
-				MessageBox.Show($"Logget ind som {App.config.GetSection("UserSettings").GetSection("Name").Value}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+				MessageBox.Show($"Logget ind som {App.config.GetSection("CurrentUser").GetSection("Name").Value}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 		catch (Exception e)
