@@ -95,48 +95,51 @@
 				Margin="20,0,0,0"
 				Background="White">
 				<Label Content="Prioritet:" />
-				<ComboBox Margin="10,0,10,0" ItemsSource="{Binding Colors}">
-					<ComboBox.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding ., StringFormat=Kun {0}}" />
-						</DataTemplate>
-					</ComboBox.ItemTemplate>
-				</ComboBox>
+				<ComboBox
+					Margin="10,0,10,0"
+					ItemsSource="{Binding FilterColors}"
+					SelectedItem="{Binding FilterColor, UpdateSourceTrigger=PropertyChanged}" />
 				<Label Content="Viste dage:" />
 				<WrapPanel Margin="0,5,0,10" HorizontalAlignment="Center">
 					<CheckBox
 						Padding="1,0,0,0"
 						Content="Man"
-						IsChecked="True" />
+						IsChecked="{Binding FilterDays[Monday]}" />
 					<CheckBox
 						Padding="1,0,0,0"
 						Content="Tir"
-						IsChecked="True" />
+						IsChecked="{Binding FilterDays[Tuesday]}" />
 					<CheckBox
 						Padding="1,0,0,0"
 						Content="Ons"
-						IsChecked="True" />
+						IsChecked="{Binding FilterDays[Wednesday]}" />
 					<CheckBox
 						Padding="1,0,0,0"
 						Content="Tor"
-						IsChecked="True" />
+						IsChecked="{Binding FilterDays[Thursday]}" />
 				</WrapPanel>
 				<WrapPanel HorizontalAlignment="Center">
 					<CheckBox
 						Padding="1,0,0,0"
 						Content="Fre"
-						IsChecked="True" />
+						IsChecked="{Binding FilterDays[Friday]}" />
 					<CheckBox
 						Padding="1,0,0,0"
 						Content="Lør"
-						IsChecked="True" />
+						IsChecked="{Binding FilterDays[Saturday]}" />
 					<CheckBox
 						Padding="1,0,0,0"
 						Content="Søn"
-						IsChecked="True" />
+						IsChecked="{Binding FilterDays[Sunday]}" />
 				</WrapPanel>
-				<Button Content="Gem filter" Margin="5 15 5 5"/>
-				<Button Content="Ryd filtre" Margin="5"/>
+				<Button
+					Margin="5,15,5,5"
+					Command="{Binding FilterMapCommand}"
+					Content="Gem filter" />
+				<Button
+					Margin="5"
+					Command="{Binding ClearFilterCommand}"
+					Content="Ryd filtre" />
 				<StackPanel.BitmapEffect>
 					<DropShadowBitmapEffect />
 				</StackPanel.BitmapEffect>

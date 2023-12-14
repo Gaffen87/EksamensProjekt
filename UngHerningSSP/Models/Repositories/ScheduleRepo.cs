@@ -23,7 +23,7 @@ public class ScheduleRepo : IRepository<Schedule>
 
 	public int Insert(Schedule schedule, Hotspot hotspot)
 	{
-		return dbAccess.SaveDataAndReturnID("spInsertSchedule", new { schedule.DayOfWeek, StartTime = DateTime.Parse(schedule.StartTime.ToString()), EndTime = DateTime.Parse(schedule.EndTime.ToString()), HotspotID = hotspot.ID });
+		return dbAccess.SaveDataAndReturnID("spInsertSchedule", new { schedule.DayOfWeek, schedule.StartTime,schedule.EndTime, HotspotID = hotspot.ID });
 	}
 
 	public Schedule Retrieve(int id)
@@ -31,9 +31,14 @@ public class ScheduleRepo : IRepository<Schedule>
 		throw new NotImplementedException();
 	}
 
+	public IEnumerable<Schedule> RetrieveAllByHotspotID(int hotspotID)
+	{
+		return dbAccess.LoadMultiple<Schedule, dynamic>("spRetrieveSchedulesByHotspotID", new { HotspotID = hotspotID });
+	}
+
 	public IEnumerable<Schedule> RetrieveAll()
 	{
-		throw new NotImplementedException();
+		return dbAccess.LoadMultiple<Schedule>("spRetrieveAllSchedules");
 	}
 
 	public void Update(Schedule entity)

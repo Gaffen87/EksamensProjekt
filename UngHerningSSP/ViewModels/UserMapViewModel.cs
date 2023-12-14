@@ -6,6 +6,7 @@ using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.UI;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Reflection.Metadata.Ecma335;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 using UngHerningSSP.Services;
@@ -27,7 +28,9 @@ public partial class UserMapViewModel : ViewModelBase
     public ObservableCollection<Hotspot>? Hotspots { get; set; }
 
     public List<string> Colors { get; set; } = new() {"Rød", "Gul", "Grøn" };
+    public List<string> FilterColors { get; set; } = new() {"Alle", "Rød", "Gul", "Grøn" };
 
+    // Properties relateret til kort og grafik på kortet
     [ObservableProperty]
 	private Map? map;
     [ObservableProperty]
@@ -42,12 +45,20 @@ public partial class UserMapViewModel : ViewModelBase
     private MapPoint? currentMapPoint;
     [ObservableProperty]
     private double size = 10;
+
+    // Properties relateret til hotspot
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string hotspotTitle = "Nyt Hotspot";
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
+
+    // Properties relateret til filtrering af hotspot visning
+    [ObservableProperty]
+    private string? filterColor;
+    [ObservableProperty]
+    private Dictionary<DayOfWeek, bool>? filterDays;
 
 	// Til TimePicker i Opret Hotspot
 	[ObservableProperty]
@@ -83,11 +94,9 @@ public partial class UserMapViewModel : ViewModelBase
     }
     private bool CanCreate()
     {
-        return HotspotColor != null 
-            && HotspotTitle != string.Empty 
-            && HotspotTitle != "Nyt Hotspot" 
-            && StartTime != string.Empty 
-            && EndTime != string.Empty;
+        return HotspotColor != null
+            && HotspotTitle != string.Empty
+            && HotspotTitle != "Nyt Hotspot";
     }
 
     private User CurrentUser()
@@ -110,7 +119,7 @@ public partial class UserMapViewModel : ViewModelBase
             //bool success = TimeOnly.TryParse(StartTime, out TimeOnly startTime) && TimeOnly.TryParse(EndTime, out TimeOnly endTime);
             if (item.Value == true)
             {
-                Schedule schedule = new() { DayOfWeek = item.Key.ToString(), StartTime = TimeOnly.Parse(StartTime), EndTime = TimeOnly.Parse(EndTime) };
+                Schedule schedule = new() { DayOfWeek = item.Key.ToString(), StartTime = DateTime.Parse(StartTime), EndTime = DateTime.Parse(EndTime) };
                 schedule.ID = scheduleRepo.Insert(schedule, hotspot);
                 schedules.Add(schedule);
             }
@@ -122,6 +131,7 @@ public partial class UserMapViewModel : ViewModelBase
     private void Initialize()
     {
 		Hotspots = new(hotspotRepo.RetrieveAllHotspots());
+
         SelectedDays = new Dictionary<DayOfWeek, bool>()
 	    {
 		    { DayOfWeek.Monday, false },
@@ -132,6 +142,16 @@ public partial class UserMapViewModel : ViewModelBase
 		    { DayOfWeek.Saturday, false },
 		    { DayOfWeek.Sunday, false }
 	    };
+		FilterDays = new Dictionary<DayOfWeek, bool>()
+		{
+			{ DayOfWeek.Monday, true },
+			{ DayOfWeek.Tuesday, true },
+			{ DayOfWeek.Wednesday, true },
+			{ DayOfWeek.Thursday, true },
+			{ DayOfWeek.Friday, true },
+			{ DayOfWeek.Saturday, true },
+			{ DayOfWeek.Sunday, true }
+		};
 
 		Map = ArcGIS.SetupMap();
         Symboler = ArcGIS.InitGraphicsOverlay();
@@ -170,6 +190,29 @@ public partial class UserMapViewModel : ViewModelBase
         Symboler!.Graphics.Remove(CurrentGraphic!);
     }
 
- 
+    [RelayCommand]
+    public void FilterMap()
+    {
+        Symboler!.Graphics.Clear();
+        List<Hotspot> filter = new();
+        foreach (var item in FilterDays!)
+        {
+            if (item.Value == true)
+            {
+                filter = Hotspots!.Where(x => x.Schedules == null || x.Schedules.Any(x => x.DayOfWeek == item.Key.ToString())).ToList();
+            }
+        }
+        if (FilterColor != "Alle")
+        {
+            filter = filter.Where(x => x.Priority == FilterColor).ToList();
+        }
+        PopulateMap(filter);
+    }
 
+    [RelayCommand]
+    public void ClearFilter()
+    {
+        Symboler!.Graphics.Clear();
+        PopulateMap(Hotspots!);
+    }
 }

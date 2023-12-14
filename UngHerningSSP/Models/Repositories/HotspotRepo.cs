@@ -10,6 +10,7 @@ namespace UngHerningSSP.Models.Repositories
     public class HotspotRepo
     {
 		private readonly LocationRepo locationRepo = new();
+        private readonly ScheduleRepo scheduleRepo = new();
         private readonly DbAccess dbAccess = new();
 		public HotspotRepo()
         {
@@ -26,6 +27,7 @@ namespace UngHerningSSP.Models.Repositories
 			foreach (var hotspot in hotspots)
 			{
 				hotspot.Location = locationRepo.GetHotspotLocation(hotspot.ID);
+                hotspot.Schedules = scheduleRepo.RetrieveAllByHotspotID(hotspot.ID).ToList();
 			}
 
             return hotspots;
