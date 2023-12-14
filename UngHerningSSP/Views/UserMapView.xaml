@@ -75,6 +75,73 @@
 				</DataTemplate>
 			</ListView.ItemTemplate>
 		</ListView>
+
+		<Expander
+			Grid.RowSpan="2"
+			Grid.Column="1"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Panel.ZIndex="1">
+			<Expander.Header>
+				<Label
+					Background="AliceBlue"
+					BorderBrush="Black"
+					BorderThickness="1"
+					Content="Filtre" />
+			</Expander.Header>
+			<StackPanel
+				Width="200"
+				Height="200"
+				Margin="20,0,0,0"
+				Background="White">
+				<Label Content="Prioritet:" />
+				<ComboBox Margin="10,0,10,0" ItemsSource="{Binding Colors}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding ., StringFormat=Kun {0}}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+				<Label Content="Viste dage:" />
+				<WrapPanel Margin="0,5,0,10" HorizontalAlignment="Center">
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Man"
+						IsChecked="True" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Tir"
+						IsChecked="True" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Ons"
+						IsChecked="True" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Tor"
+						IsChecked="True" />
+				</WrapPanel>
+				<WrapPanel HorizontalAlignment="Center">
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Fre"
+						IsChecked="True" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Lør"
+						IsChecked="True" />
+					<CheckBox
+						Padding="1,0,0,0"
+						Content="Søn"
+						IsChecked="True" />
+				</WrapPanel>
+				<Button Content="Gem filter" Margin="5 15 5 5"/>
+				<Button Content="Ryd filtre" Margin="5"/>
+				<StackPanel.BitmapEffect>
+					<DropShadowBitmapEffect />
+				</StackPanel.BitmapEffect>
+			</StackPanel>
+		</Expander>
 		<StackPanel
 			x:Name="MarkerControl"
 			Grid.RowSpan="2"

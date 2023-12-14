@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <Resource Include="Untitled (1).png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
