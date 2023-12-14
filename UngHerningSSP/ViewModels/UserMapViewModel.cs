@@ -4,6 +4,7 @@ using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.UI;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Reflection.Metadata.Ecma335;
@@ -36,7 +37,10 @@ public partial class UserMapViewModel : ViewModelBase
     [ObservableProperty]
     private GraphicsOverlayCollection? graphicsOverlays;
     [ObservableProperty]
-    private GraphicsOverlay? symboler;
+    private GraphicsOverlay? hotspotLayer;
+    [ObservableProperty]
+    private GraphicsOverlay? observationLayer;
+
     [ObservableProperty]
     private SimpleMarkerSymbol? currentPoint;
     [ObservableProperty]
@@ -53,9 +57,15 @@ public partial class UserMapViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
-
-    // Properties relateret til filtrering af hotspot visning
     [ObservableProperty]
+    private Hotspot? selectedHotspot;
+	partial void OnSelectedHotspotChanged(Hotspot? value)
+	{
+        //Map = ArcGIS.SetupMap(SelectedHotspot.Location.Latitude, SelectedHotspot.Location.Longitude);
+	}
+
+	// Properties relateret til filtrering af hotspot visning
+	[ObservableProperty]
     private string? filterColor;
     [ObservableProperty]
     private Dictionary<DayOfWeek, bool>? filterDays;
@@ -153,11 +163,13 @@ public partial class UserMapViewModel : ViewModelBase
 			{ DayOfWeek.Sunday, true }
 		};
 
-		Map = ArcGIS.SetupMap();
-        Symboler = ArcGIS.InitGraphicsOverlay();
+		Map = ArcGIS.SetupMap(56.13, 8.98);
+        HotspotLayer = ArcGIS.InitGraphicsOverlay();
+        ObservationLayer = ArcGIS.InitGraphicsOverlay();
         GraphicsOverlays = new()
 		{
-			Symboler
+			HotspotLayer,
+            ObservationLayer
 		};
 
 		PopulateMap(Hotspots);
@@ -171,48 +183,60 @@ public partial class UserMapViewModel : ViewModelBase
 
         CurrentGraphic = new Graphic(CurrentMapPoint, CurrentPoint);
 
-        Symboler!.Graphics.Add(CurrentGraphic);
+        HotspotLayer!.Graphics.Add(CurrentGraphic);
 	}
 
-    private void PopulateMap(IEnumerable<Hotspot> hotspots) 
+    private void PopulateMap(IEnumerable items) 
     {
-        foreach (Hotspot hotspot in hotspots)
+        foreach (var item in items)
         {
-            var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, hotspot.Priority, Size);
-			MapPoint location = new(hotspot.Location.Longitude, hotspot.Location.Latitude, SpatialReferences.Wgs84);
-            Symboler!.Graphics.Add(new Graphic(location, symbol));
+            if (item is Hotspot)
+            {
+                var hotspot = item as Hotspot;
+                var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, hotspot!.Priority, Size);
+                MapPoint location = new(hotspot.Location.Longitude, hotspot.Location.Latitude, SpatialReferences.Wgs84);
+                HotspotLayer!.Graphics.Add(new Graphic(location, symbol));
+            }
+            if (item is Observation)
+            {
+                var observation = item as Observation;
+				var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.X, observation!.Severity, Size);
+				MapPoint location = new(observation.Location.Longitude, observation.Location.Latitude, SpatialReferences.Wgs84);
+				ObservationLayer!.Graphics.Add(new Graphic(location, symbol));
+			}
         }
     }
 
     [RelayCommand]
     public void DeletePoint()
     {
-        Symboler!.Graphics.Remove(CurrentGraphic!);
+        HotspotLayer!.Graphics.Remove(CurrentGraphic!);
     }
 
     [RelayCommand]
     public void FilterMap()
     {
-        Symboler!.Graphics.Clear();
+        HotspotLayer!.Graphics.Clear();
         List<Hotspot> filter = new();
         foreach (var item in FilterDays!)
         {
             if (item.Value == true)
             {
-                filter = Hotspots!.Where(x => x.Schedules == null || x.Schedules.Any(x => x.DayOfWeek == item.Key.ToString())).ToList();
+                filter.AddRange(Hotspots!.Where(x => x.Schedules.Any(x => x.DayOfWeek == item.Key.ToString())).ToList());
             }
         }
         if (FilterColor != "Alle")
         {
             filter = filter.Where(x => x.Priority == FilterColor).ToList();
         }
+        filter = filter.Distinct().ToList();
         PopulateMap(filter);
     }
 
     [RelayCommand]
     public void ClearFilter()
     {
-        Symboler!.Graphics.Clear();
+        HotspotLayer!.Graphics.Clear();
         PopulateMap(Hotspots!);
     }
 }

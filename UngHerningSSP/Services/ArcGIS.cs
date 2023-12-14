@@ -15,12 +15,12 @@ namespace UngHerningSSP.Services;
 public class ArcGIS
 {
 	// Opsætter kortet der vises via MapView control
-	public static Map SetupMap()
+	public static Map SetupMap(double latitude, double longitude)
 	{
 		// Sætter kortets udseende, zoom, sted og referenceskala
 		Map map = new(BasemapStyle.OSMLightGray)
 		{
-			InitialViewpoint = new Viewpoint(56.13, 8.98, 100000),
+			InitialViewpoint = new Viewpoint(latitude, longitude, 100000),
 
 			ReferenceScale = 100000
 		};
@@ -30,10 +30,10 @@ public class ArcGIS
 	// Opretter et nyt lag til grafik på kortet som bruges til at vise symboler
 	public static GraphicsOverlay InitGraphicsOverlay()
 	{
-		var symboler = new GraphicsOverlay();
-		symboler.ScaleSymbols = true; // Grafik skalerer sammen med kortet
+		var layer = new GraphicsOverlay();
+		layer.ScaleSymbols = true; // Grafik skalerer sammen med kortet
 
-		return symboler;
+		return layer;
 	}
 
 	public static MapPoint CreateMarker(MapPoint location)

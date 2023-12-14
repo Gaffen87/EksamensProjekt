@@ -28,6 +28,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="40" />
 			<RowDefinition />
+			<RowDefinition Height="50" />
 		</Grid.RowDefinitions>
 		<Label
 			HorizontalContentAlignment="Center"
@@ -40,41 +41,69 @@
 			d:ItemsSource="{d:SampleData}"
 			Cursor="Hand"
 			ItemsSource="{Binding Hotspots}"
+			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 			ScrollViewer.VerticalScrollBarVisibility="Visible"
+			SelectedItem="{Binding SelectedHotspot}"
+			SelectionChanged="ListView_SelectionChanged"
 			SelectionMode="Single">
 			<ListView.ItemTemplate>
 				<DataTemplate>
-					<Grid Margin="0,5,0,5">
-						<StackPanel>
-							<TextBlock Text="{Binding Title}" />
-							<Rectangle
-								Width="10"
-								Height="10"
-								Stroke="Black"
-								StrokeThickness="0.5">
-								<Rectangle.Style>
-									<Style TargetType="Rectangle">
-										<Style.Triggers>
-											<DataTrigger Binding="{Binding Priority}" Value="Rød">
-												<Setter Property="Fill" Value="Red" />
-											</DataTrigger>
-											<DataTrigger Binding="{Binding Priority}" Value="Gul">
-												<Setter Property="Fill" Value="Yellow" />
-											</DataTrigger>
-											<DataTrigger Binding="{Binding Priority}" Value="Grøn">
-												<Setter Property="Fill" Value="Green" />
-											</DataTrigger>
-										</Style.Triggers>
-									</Style>
-								</Rectangle.Style>
-							</Rectangle>
-							<TextBlock Text="{Binding Location.Longitude}" />
-							<TextBlock Text="{Binding Location.Latitude}" />
+					<Grid Margin="5">
+						<StackPanel Width="300" Background="AliceBlue">
+							<WrapPanel>
+								<Ellipse
+									Width="50"
+									Height="50"
+									Stroke="Black"
+									StrokeThickness="1">
+									<Ellipse.Style>
+										<Style TargetType="Ellipse">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding Priority}" Value="Rød">
+													<Setter Property="Fill" Value="Red" />
+												</DataTrigger>
+												<DataTrigger Binding="{Binding Priority}" Value="Gul">
+													<Setter Property="Fill" Value="Yellow" />
+												</DataTrigger>
+												<DataTrigger Binding="{Binding Priority}" Value="Grøn">
+													<Setter Property="Fill" Value="Green" />
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Ellipse.Style>
+								</Ellipse>
+								<StackPanel Margin="5">
+									<TextBlock
+										FontSize="15"
+										FontWeight="Bold"
+										Text="{Binding Title}" />
+									<TextBlock Text="{Binding Location.Longitude}" />
+									<TextBlock Text="{Binding Location.Latitude}" />
+								</StackPanel>
+							</WrapPanel>
 						</StackPanel>
 					</Grid>
 				</DataTemplate>
 			</ListView.ItemTemplate>
 		</ListView>
+
+		<Button
+			x:Name="btDelete"
+			Grid.Row="2"
+			Width="100"
+			Margin="5,5,10,5"
+			HorizontalAlignment="Right"
+			d:Visibility="Visible"
+			Content="Slet"
+			Visibility="Collapsed" />
+
+		<Button
+			x:Name="btNewObs"
+			Grid.Row="2"
+			Width="100"
+			Margin="10,5,5,5"
+			HorizontalAlignment="Left"
+			Content="Ny hændelse" />
 
 		<Expander
 			Grid.RowSpan="2"
@@ -296,7 +325,7 @@
 		</StackPanel>
 		<esri:MapView
 			x:Name="MapView"
-			Grid.RowSpan="2"
+			Grid.RowSpan="3"
 			Grid.Column="1"
 			GeoViewTapped="MapView_GeoViewTapped"
 			GraphicsOverlays="{Binding GraphicsOverlays}"

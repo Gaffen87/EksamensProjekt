@@ -10,6 +10,7 @@
 	Title="MainWindow"
 	Width="1920"
 	Height="1080"
+	d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
 	WindowStartupLocation="CenterScreen"
 	WindowState="Maximized"
 	mc:Ignorable="d">
@@ -18,10 +19,27 @@
 			<RowDefinition Height="50" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
+		<WrapPanel VerticalAlignment="Center" Panel.ZIndex="1">
+			<Button
+				x:Name="btMap"
+				Width="125"
+				Height="40"
+				Margin="10,0,10,0"
+				Click="btMap_Click"
+				Content="Kortoversigt"
+				IsEnabled="False" />
+			<Button
+				x:Name="btObs"
+				Width="125"
+				Content="Hændelsesoversigt"
+				IsEnabled="False" Click="btObs_Click" />
+		</WrapPanel>
 		<Frame Background="Aqua" />
 		<Frame
+			x:Name="MainFrame"
 			Grid.Row="1"
 			Content="{Binding CurrentViewModel}"
+			ContentRendered="Frame_ContentRendered"
 			NavigationUIVisibility="Hidden">
 			<Frame.Resources>
 				<DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
