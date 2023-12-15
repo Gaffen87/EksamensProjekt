@@ -43,9 +43,21 @@
 			<Button
 				x:Name="btObs"
 				Width="125"
+				Click="btObs_Click"
 				Content="Hændelsesoversigt"
-				IsEnabled="False" Click="btObs_Click" />
+				IsEnabled="False" />
 		</WrapPanel>
+		<Button
+			x:Name="btLogOut"
+			Width="75"
+			Height="40"
+			Margin="0,0,10,0"
+			HorizontalAlignment="Right"
+			Panel.ZIndex="1"
+			d:Visibility="Visible"
+			Click="btLogOut_Click"
+			Content="Log ud"
+			Visibility="Collapsed" />
 		<Frame Background="Aqua" />
 		<Frame
 			x:Name="MainFrame"

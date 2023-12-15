@@ -28,10 +28,12 @@ public partial class MainWindow : Window
 		if (frame!.Content is UserMapView)
 		{
 			btObs.IsEnabled = true;
+			btLogOut.Visibility = Visibility.Visible;
 		}
 		if (frame.Content is UserObservationsView)
 		{ 
 			btMap.IsEnabled = true;
+			btLogOut.Visibility = Visibility.Visible;
 		}
 	}
 
@@ -43,5 +45,12 @@ public partial class MainWindow : Window
 	private void btObs_Click(object sender, RoutedEventArgs e)
 	{
 		MainFrame.NavigationService.Navigate(new UserObservationsView());
+	}
+
+	private void btLogOut_Click(object sender, RoutedEventArgs e)
+	{
+		App.config.GetSection("CurrentUser").GetSection("IsAdmin").Value = "false";
+		MainFrame.NavigationService.Navigate(new LoginView());
+		btLogOut.Visibility = Visibility.Collapsed;
 	}
 }
