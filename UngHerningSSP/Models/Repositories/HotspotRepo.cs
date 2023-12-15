@@ -7,7 +7,7 @@ using UngHerningSSP.DataAccess;
 
 namespace UngHerningSSP.Models.Repositories
 {
-    public class HotspotRepo
+    public class HotspotRepo : IRepository<Hotspot>
     {
 		private readonly LocationRepo locationRepo = new();
         private readonly ScheduleRepo scheduleRepo = new();
@@ -16,12 +16,29 @@ namespace UngHerningSSP.Models.Repositories
         {
 		}
 
-        public int InsertHotspot(Hotspot hotspot, User user, Location location)
+		public void Delete(Hotspot hotspot)
+		{
+			int id = hotspot.Location.ID;
+			dbAccess.SaveData("spDeleteHotspot", new { hotspot.ID });
+			locationRepo.Delete(id);
+		}
+
+		public int Insert(Hotspot hotspot)
+		{
+			throw new NotImplementedException();
+		}
+
+		public int Insert(Hotspot hotspot, User user, Location location)
         {
             return dbAccess.SaveDataAndReturnID("spInsertHotspot", new { hotspot.Title, hotspot.Priority, LocationID = location.ID, UserID = user.ID });
         }
 
-        public List<Hotspot> RetrieveAllHotspots()
+		public Hotspot Retrieve(int id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public List<Hotspot> RetrieveAll()
         {
             var hotspots = dbAccess.LoadMultiple<Hotspot>("spRetrieveAllHotspots").ToList();
 			foreach (var hotspot in hotspots)
@@ -32,5 +49,15 @@ namespace UngHerningSSP.Models.Repositories
 
             return hotspots;
 		}
-    }
+
+		public void Update(Hotspot hotspot)
+		{
+			throw new NotImplementedException();
+		}
+
+		IEnumerable<Hotspot> IRepository<Hotspot>.RetrieveAll()
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

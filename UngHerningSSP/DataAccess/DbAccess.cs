@@ -13,7 +13,7 @@ public class DbAccess
 	private readonly string? connectionString;
 
 	/// <summary>
-	/// Bruges til at gemme et objekt i db med retur værdi
+	/// Bruges til at gemme/opdatere/slette et objekt i db med retur værdi
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="sql">Sql sætningen som skal køres</param>
@@ -26,7 +26,7 @@ public class DbAccess
 	}
 
 	/// <summary>
-	/// Bruges til at gemme et objekt i db uden retur værdi
+	/// Bruges til at gemme/opdatere/slette et objekt i db uden retur værdi
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="sql">Sql sætningen som skal køres</param>
@@ -34,7 +34,7 @@ public class DbAccess
 	public void SaveData<T>(string sql, T parameters)
 	{
 		using SqlConnection con = new(connectionString);
-		con.QuerySingle<T>(sql, parameters, commandType: CommandType.StoredProcedure);
+		con.QuerySingle<int>(sql, parameters, commandType: CommandType.StoredProcedure);
 	}
 
 	/// <summary>

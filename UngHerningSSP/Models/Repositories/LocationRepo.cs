@@ -29,5 +29,10 @@ namespace UngHerningSSP.Models.Repositories
 		{
 			return dbAccess.LoadMultiple<Location>("spRetrieveAllLocations").ToList();
 		}
+
+		public void Delete(int id)
+		{
+			dbAccess.SaveData("spDeleteLocation", new { ID = id });
+		}
     }
 }

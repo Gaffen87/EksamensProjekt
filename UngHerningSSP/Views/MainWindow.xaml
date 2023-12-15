@@ -14,6 +14,18 @@
 	WindowStartupLocation="CenterScreen"
 	WindowState="Maximized"
 	mc:Ignorable="d">
+	<Window.Resources>
+		<Style TargetType="Button">
+			<Setter Property="Background" Value="#4F4F4F" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Style.Resources>
+				<Style TargetType="Border">
+					<Setter Property="CornerRadius" Value="3" />
+				</Style>
+			</Style.Resources>
+		</Style>
+	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50" />

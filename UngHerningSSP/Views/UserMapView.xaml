@@ -19,8 +19,24 @@
 		<Style TargetType="CheckBox">
 			<Setter Property="Margin" Value="5,0,5,0" />
 		</Style>
+
+		<Style x:Key="exp" TargetType="Expander">
+			<Setter Property="Background" Value="Blue" />
+		</Style>
+
+		<Style TargetType="Button">
+			<Setter Property="Background" Value="#4F4F4F" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Style.Resources>
+				<Style TargetType="Border">
+					<Setter Property="CornerRadius" Value="3" />
+				</Style>
+			</Style.Resources>
+		</Style>
 	</Page.Resources>
-	<Grid>
+	
+	<Grid Background="Aqua">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
 			<ColumnDefinition Width="4.5*" />
@@ -30,15 +46,16 @@
 			<RowDefinition />
 			<RowDefinition Height="50" />
 		</Grid.RowDefinitions>
-		<Label
+		<d:Label
 			HorizontalContentAlignment="Center"
 			Background="Gray"
 			Content="Hotspots"
 			FontSize="18"
 			FontWeight="Bold" />
 		<ListView
-			Grid.Row="1"
+			Grid.RowSpan="2"
 			d:ItemsSource="{d:SampleData}"
+			Background="Aqua"
 			Cursor="Hand"
 			ItemsSource="{Binding Hotspots}"
 			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
@@ -49,7 +66,7 @@
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<Grid Margin="5">
-						<StackPanel Width="300" Background="AliceBlue">
+						<StackPanel Width="300">
 							<WrapPanel>
 								<Ellipse
 									Width="50"
@@ -94,6 +111,7 @@
 			Margin="5,5,10,5"
 			HorizontalAlignment="Right"
 			d:Visibility="Visible"
+			Command="{Binding DeleteHotspotCommand}"
 			Content="Slet"
 			Visibility="Collapsed" />
 
@@ -103,7 +121,151 @@
 			Width="100"
 			Margin="10,5,5,5"
 			HorizontalAlignment="Left"
+			Click="btNewObs_Click"
 			Content="Ny hændelse" />
+
+		<Grid
+			x:Name="CreateObsPanel"
+			Grid.Row="1"
+			Grid.ColumnSpan="2"
+			Width="400"
+			Height="500"
+			Margin="80,40,40,40"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Bottom"
+			Panel.ZIndex="1"
+			d:Visibility="Visible"
+			Background="White"
+			Visibility="Collapsed">
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition Height="30" />
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition Height="30" />
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Border
+				Grid.ColumnSpan="2"
+				BorderBrush="Black"
+				BorderThickness="1">
+				<Label
+					HorizontalContentAlignment="Center"
+					Background="Aqua"
+					Content="Ny Hændelse"
+					FontSize="20"
+					FontWeight="SemiBold" />
+			</Border>
+			<TextBlock
+				Grid.Row="1"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				d:Text="01/01/01 - 00:00"
+				Text="{Binding CurrentTime, StringFormat=Oprettet: {0:dd/MM/yy - HH:mm}}" />
+			<TextBlock
+				Grid.Row="1"
+				Grid.Column="1"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				d:Text="Fornavn Efternavn"
+				Text="{Binding UserName}" />
+			<Label
+				Grid.Row="2"
+				Margin="20,0,0,0"
+				VerticalContentAlignment="Center"
+				Content="Bekymringsgrad:" />
+			<ComboBox
+				Grid.Row="2"
+				Grid.ColumnSpan="2"
+				Width="200"
+				Margin="12,12,30,12"
+				HorizontalAlignment="Right"
+				ItemsSource="{Binding Colors}"
+				SelectedItem="{Binding Severity}" />
+			<Label
+				Grid.Row="3"
+				Margin="20,0,0,0"
+				VerticalContentAlignment="Center"
+				Content="Observeret adfærd" />
+			<ComboBox
+				Grid.Row="3"
+				Grid.ColumnSpan="2"
+				Width="200"
+				Margin="12,12,30,12"
+				HorizontalAlignment="Right"
+				ItemsSource="{Binding Behaviours}"
+				SelectedItem="{Binding Behaviour}" />
+			<Label
+				Grid.Row="4"
+				Margin="20,0,0,0"
+				VerticalContentAlignment="Center"
+				Content="Pædagogisk indsats:" />
+			<ComboBox
+				Grid.Row="4"
+				Grid.ColumnSpan="2"
+				Width="200"
+				Margin="12,12,30,12"
+				HorizontalAlignment="Right"
+				ItemsSource="{Binding Approaches}"
+				SelectedItem="{Binding Approach}" />
+			<Label
+				Grid.Row="5"
+				Margin="20,0,0,0"
+				VerticalContentAlignment="Center"
+				Content="Antal unge?" />
+			<ex:IntegerUpDown
+				Grid.Row="5"
+				Grid.Column="2"
+				Width="50"
+				Margin="0,10,50,10"
+				HorizontalAlignment="Center"
+				HorizontalContentAlignment="Center"
+				Minimum="0"
+				Value="{Binding Count}" />
+			<Label
+				Grid.Row="6"
+				Margin="20,0,0,0"
+				Content="Beskrivelse:" />
+			<ex:RichTextBox
+				Grid.Row="7"
+				Grid.RowSpan="3"
+				Grid.ColumnSpan="2"
+				Margin="10,-8,10,0"
+				Padding="5"
+				Background="WhiteSmoke"
+				Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+			<Button
+				Grid.Row="11"
+				Margin="40,10"
+				Click="Button_Click"
+				Content="Gem" />
+			<Button
+				Grid.Row="11"
+				Grid.Column="1"
+				Margin="40,10"
+				Click="Button_Click"
+				Content="Fortryd" />
+			<ScrollViewer
+				Grid.Row="8"
+				Grid.Column="1"
+				Width="455"
+				Height="0"
+				Margin="0,49,0,0"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top" />
+			<Grid.BitmapEffect>
+				<DropShadowBitmapEffect />
+			</Grid.BitmapEffect>
+		</Grid>
 
 		<Expander
 			Grid.RowSpan="2"
@@ -119,56 +281,95 @@
 					Content="Filtre" />
 			</Expander.Header>
 			<StackPanel
-				Width="200"
+				Width="225"
 				Height="200"
 				Margin="20,0,0,0"
 				Background="White">
-				<Label Content="Prioritet:" />
-				<ComboBox
-					Margin="10,0,10,0"
-					ItemsSource="{Binding FilterColors}"
-					SelectedItem="{Binding FilterColor, UpdateSourceTrigger=PropertyChanged}" />
-				<Label Content="Viste dage:" />
-				<WrapPanel Margin="0,5,0,10" HorizontalAlignment="Center">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+					</Grid.RowDefinitions>
 					<CheckBox
-						Padding="1,0,0,0"
-						Content="Man"
-						IsChecked="{Binding FilterDays[Monday]}" />
+						Margin="5"
+						Content="Vis Hotspots"
+						IsChecked="{Binding ShowHotspots}" />
 					<CheckBox
-						Padding="1,0,0,0"
-						Content="Tir"
-						IsChecked="{Binding FilterDays[Tuesday]}" />
-					<CheckBox
-						Padding="1,0,0,0"
-						Content="Ons"
-						IsChecked="{Binding FilterDays[Wednesday]}" />
-					<CheckBox
-						Padding="1,0,0,0"
-						Content="Tor"
-						IsChecked="{Binding FilterDays[Thursday]}" />
-				</WrapPanel>
-				<WrapPanel HorizontalAlignment="Center">
-					<CheckBox
-						Padding="1,0,0,0"
-						Content="Fre"
-						IsChecked="{Binding FilterDays[Friday]}" />
-					<CheckBox
-						Padding="1,0,0,0"
-						Content="Lør"
-						IsChecked="{Binding FilterDays[Saturday]}" />
-					<CheckBox
-						Padding="1,0,0,0"
-						Content="Søn"
-						IsChecked="{Binding FilterDays[Sunday]}" />
-				</WrapPanel>
-				<Button
-					Margin="5,15,5,5"
-					Command="{Binding FilterMapCommand}"
-					Content="Gem filter" />
-				<Button
-					Margin="5"
-					Command="{Binding ClearFilterCommand}"
-					Content="Ryd filtre" />
+						Grid.Column="1"
+						Margin="5"
+						Content="Vis Hændelser"
+						IsChecked="{Binding ShowObservations}" />
+					<Label
+						Grid.Row="1"
+						Grid.ColumnSpan="2"
+						Content="Prioritet/Bekymringsgrad:" />
+					<ComboBox
+						Grid.Row="2"
+						Grid.ColumnSpan="2"
+						Margin="20,0,20,10"
+						ItemsSource="{Binding FilterColors}"
+						SelectedItem="{Binding FilterColor, UpdateSourceTrigger=PropertyChanged}" />
+					<Label Grid.Row="3" Content="Viste dage:" />
+					<WrapPanel
+						Grid.Row="4"
+						Grid.ColumnSpan="2"
+						Margin="0,5,0,10"
+						HorizontalAlignment="Center">
+						<CheckBox
+							Padding="1,0,0,0"
+							Content="Man"
+							IsChecked="{Binding FilterDays[Monday]}" />
+						<CheckBox
+							Padding="1,0,0,0"
+							Content="Tir"
+							IsChecked="{Binding FilterDays[Tuesday]}" />
+						<CheckBox
+							Padding="1,0,0,0"
+							Content="Ons"
+							IsChecked="{Binding FilterDays[Wednesday]}" />
+						<CheckBox
+							Padding="1,0,0,0"
+							Content="Tor"
+							IsChecked="{Binding FilterDays[Thursday]}" />
+					</WrapPanel>
+					<WrapPanel
+						Grid.Row="5"
+						Grid.ColumnSpan="2"
+						HorizontalAlignment="Center">
+						<CheckBox
+							Padding="1,0,0,0"
+							Content="Fre"
+							IsChecked="{Binding FilterDays[Friday]}" />
+						<CheckBox
+							Padding="1,0,0,0"
+							Content="Lør"
+							IsChecked="{Binding FilterDays[Saturday]}" />
+						<CheckBox
+							Padding="1,0,0,0"
+							Content="Søn"
+							IsChecked="{Binding FilterDays[Sunday]}" />
+					</WrapPanel>
+					<Button
+						Grid.Row="6"
+						Margin="5,15,5,5"
+						Command="{Binding FilterMapCommand}"
+						Content="Gem filter" />
+					<Button
+						Grid.Row="6"
+						Grid.Column="1"
+						Margin="5,15,5,5"
+						Command="{Binding ClearFilterCommand}"
+						Content="Ryd filtre" />
+				</Grid>
 				<StackPanel.BitmapEffect>
 					<DropShadowBitmapEffect />
 				</StackPanel.BitmapEffect>

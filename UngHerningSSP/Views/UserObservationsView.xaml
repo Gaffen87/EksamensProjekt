@@ -8,8 +8,8 @@
 	xmlns:viewmodel="clr-namespace:UngHerningSSP.ViewModels"
 	Title="UserObservationsView"
 	d:DataContext="{d:DesignInstance Type=viewmodel:UserObservationsViewModel}"
-	d:DesignHeight="450"
-	d:DesignWidth="800"
+	d:DesignHeight="1080"
+	d:DesignWidth="1920"
 	mc:Ignorable="d">
 
 	<Grid Background="white">
@@ -20,7 +20,10 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="40" />
 			<RowDefinition />
+			<RowDefinition Height="50" />
 		</Grid.RowDefinitions>
+		
+		
 		<Label
 			HorizontalContentAlignment="Center"
 			Background="Gray"

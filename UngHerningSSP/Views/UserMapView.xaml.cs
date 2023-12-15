@@ -51,9 +51,29 @@ public partial class UserMapView : Page
 
 	private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		Viewpoint view = new(56.13, 8.98, 100000);
-		Viewpoint newView = new(viewModel.SelectedHotspot.Location.Latitude, viewModel.SelectedHotspot.Location.Longitude, 10000);
-		await MapView.SetViewpointAsync(view, TimeSpan.FromSeconds(1));
-		await MapView.SetViewpointAsync(newView, TimeSpan.FromSeconds(1));
+		if (viewModel.SelectedHotspot != null)
+		{
+			double latitude = viewModel.SelectedHotspot.Location.Latitude;
+			double longitude = viewModel.SelectedHotspot.Location.Longitude;
+
+			Viewpoint view = new(56.13, 8.98, 100000);
+			Viewpoint newView = new(latitude, longitude, 10000);
+			await MapView.SetViewpointAsync(view, TimeSpan.FromSeconds(1));
+			await MapView.SetViewpointAsync(newView, TimeSpan.FromSeconds(1));
+		}
+		else
+		{
+			await MapView.SetViewpointAsync(new Viewpoint(56.13, 8.98, 100000), TimeSpan.FromSeconds(1));
+		}
+	}
+
+	private void btNewObs_Click(object sender, RoutedEventArgs e)
+	{
+		CreateObsPanel.Visibility = Visibility.Visible;
+	}
+
+	private void Button_Click(object sender, RoutedEventArgs e)
+	{
+		CreateObsPanel.Visibility= Visibility.Collapsed;
 	}
 }

@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Reflection.Metadata.Ecma335;
+using System.Windows;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 using UngHerningSSP.Services;
@@ -19,14 +20,14 @@ public partial class UserMapViewModel : ViewModelBase
     UserRepo userRepo = new();
     LocationRepo locationRepo = new();
     ScheduleRepo scheduleRepo = new();
+    ObservationsRepo observationsRepo = new();
     public UserMapViewModel()
     {
-        
         Initialize();
-        
 	}
 
     public ObservableCollection<Hotspot>? Hotspots { get; set; }
+    public ObservableCollection<Observation>? Observations { get; set; }
 
     public List<string> Colors { get; set; } = new() {"Rød", "Gul", "Grøn" };
     public List<string> FilterColors { get; set; } = new() {"Alle", "Rød", "Gul", "Grøn" };
@@ -40,8 +41,20 @@ public partial class UserMapViewModel : ViewModelBase
     private GraphicsOverlay? hotspotLayer;
     [ObservableProperty]
     private GraphicsOverlay? observationLayer;
-
     [ObservableProperty]
+    private bool showHotspots = true;
+    [ObservableProperty]
+    private bool showObservations = true;
+	partial void OnShowHotspotsChanged(bool value)
+	{
+		HotspotLayer!.IsVisible = value;
+	}
+	partial void OnShowObservationsChanged(bool value)
+	{
+		ObservationLayer!.IsVisible = value;
+	}
+
+	[ObservableProperty]
     private SimpleMarkerSymbol? currentPoint;
     [ObservableProperty]
     private Graphic? currentGraphic;
@@ -57,27 +70,6 @@ public partial class UserMapViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
-    [ObservableProperty]
-    private Hotspot? selectedHotspot;
-	partial void OnSelectedHotspotChanged(Hotspot? value)
-	{
-        //Map = ArcGIS.SetupMap(SelectedHotspot.Location.Latitude, SelectedHotspot.Location.Longitude);
-	}
-
-	// Properties relateret til filtrering af hotspot visning
-	[ObservableProperty]
-    private string? filterColor;
-    [ObservableProperty]
-    private Dictionary<DayOfWeek, bool>? filterDays;
-
-	// Til TimePicker i Opret Hotspot
-	[ObservableProperty]
-	private string? startTime;
-	[ObservableProperty]
-	private string? endTime;
-    [ObservableProperty]
-    private Dictionary<DayOfWeek, bool>? selectedDays;
-
 	partial void OnHotspotColorChanged(string? value)
     {
         switch (value)
@@ -93,11 +85,57 @@ public partial class UserMapViewModel : ViewModelBase
                 break;
         }
     }
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(DeleteHotspotCommand))]
+    private Hotspot? selectedHotspot;
+
+	// Properties relateret til filtrering af hotspot visning
+	[ObservableProperty]
+    private string? filterColor;
+    [ObservableProperty]
+    private Dictionary<DayOfWeek, bool>? filterDays;
+	// Til TimePicker i Opret Hotspot
+	[ObservableProperty]
+	private string? startTime;
+	[ObservableProperty]
+	private string? endTime;
+    [ObservableProperty]
+    private Dictionary<DayOfWeek, bool>? selectedDays;
+
+    // Properties relateret til Observations
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
+    private Observation createdObservation;
+    [ObservableProperty]
+    private string? severity;
+	partial void OnSeverityChanged(string? value)
+	{
+	}
+	[ObservableProperty]
+    private string? behaviour;
+	partial void OnBehaviourChanged(string? value)
+	{
+	}
+	[ObservableProperty]
+    private string? approach;
+	partial void OnApproachChanged(string? value)
+	{
+	}
+	[ObservableProperty]
+    private int count;
+    [ObservableProperty]
+    private string? description;
+	public string UserName { get; set; } = App.config.GetSection("CurrentUser").GetSection("Name").Value ?? "";
+    public DateTime CurrentTime { get; set; } = DateTime.Now;
+    public List<string> Behaviours { get; set; } = new() { "Hærværk", "Fest", "Rusmidler", "Intet at bemærke" };
+    public List<string> Approaches { get; set; } = new() { "Intet relevant", "Relationsarbejde", "Samtale", "Guidning", "Positive fællesskaber" };
+
+
     [RelayCommand(CanExecute = nameof(CanCreate))]
     public void CreateHotspot()
     {
         Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = ClickedLocation(), User = CurrentUser() };
-        hotspot.ID = hotspotRepo.InsertHotspot(hotspot, CurrentUser(), ClickedLocation());
+        hotspot.ID = hotspotRepo.Insert(hotspot, CurrentUser(), ClickedLocation());
         hotspot.Schedules = CreateSchedule(hotspot);
 
         Hotspots!.Add(hotspot);
@@ -140,7 +178,8 @@ public partial class UserMapViewModel : ViewModelBase
 
     private void Initialize()
     {
-		Hotspots = new(hotspotRepo.RetrieveAllHotspots());
+		Hotspots = new(hotspotRepo.RetrieveAll());
+        Observations = new(observationsRepo.GetList());
 
         SelectedDays = new Dictionary<DayOfWeek, bool>()
 	    {
@@ -238,5 +277,34 @@ public partial class UserMapViewModel : ViewModelBase
     {
         HotspotLayer!.Graphics.Clear();
         PopulateMap(Hotspots!);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanDelete))]
+    public void DeleteHotspot()
+    {
+        var result = MessageBox.Show($"Vil du slette Hotspottet: {SelectedHotspot!.Title}", "Er du sikker?", MessageBoxButton.YesNo);
+        if (result == MessageBoxResult.Yes)
+        {
+            hotspotRepo.Delete(SelectedHotspot!);
+            Hotspots!.Remove(SelectedHotspot!);
+            HotspotLayer!.Graphics.Clear();
+            PopulateMap(Hotspots);
+        }
+    }
+    private bool CanDelete()
+    {
+        return SelectedHotspot != null;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCreateObservation))]
+    public void CreateObservation()
+    {
+
+    }
+    private bool CanCreateObservation()
+    {
+        return CreatedObservation.Approach != null
+            && CreatedObservation.Behavior != null
+            && CreatedObservation.Severity != null;
     }
 }

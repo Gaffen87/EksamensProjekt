@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,7 @@ public class Observation
 {
     public int ID { get; set; }
 
-    public DateOnly Date { get; set; }
-
-    public TimeOnly Time { get; set; }
+    public DateTime DateAndTime { get; set; }
 
     public string Severity { get; set; }
 
@@ -23,9 +22,7 @@ public class Observation
 
     public string Description { get; set; }
 
-    public Byte[] Image { get; set; }
-
     public Location Location { get; set; }
 
-    public User user { get; set; }
+    public User User { get; set; }
 }
