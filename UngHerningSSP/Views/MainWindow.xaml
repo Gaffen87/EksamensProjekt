@@ -58,7 +58,7 @@
 			Click="btLogOut_Click"
 			Content="Log ud"
 			Visibility="Collapsed" />
-		<Frame Background="Aqua" />
+		<Frame Background="#2f4b5f" />
 		<Frame
 			x:Name="MainFrame"
 			Grid.Row="1"
@@ -69,11 +69,11 @@
 				<DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
 					<views:LoginView />
 				</DataTemplate>
-				<DataTemplate DataType="{x:Type viewModels:UserMapViewModel}">
-					<views:UserMapView />
+				<DataTemplate DataType="{x:Type viewModels:MapViewModel}">
+					<views:MapView />
 				</DataTemplate>
-				<DataTemplate DataType="{x:Type viewModels:UserObservationsViewModel}">
-					<views:UserObservationsView />
+				<DataTemplate DataType="{x:Type viewModels:ObservationsViewModel}">
+					<views:ObservationsView />
 				</DataTemplate>
 			</Frame.Resources>
 		</Frame>

@@ -7,21 +7,20 @@ using Esri.ArcGISRuntime.UI;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Reflection.Metadata.Ecma335;
 using System.Windows;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 using UngHerningSSP.Services;
 
 namespace UngHerningSSP.ViewModels;
-public partial class UserMapViewModel : ViewModelBase
+public partial class MapViewModel : ViewModelBase
 {
     HotspotRepo hotspotRepo = new();
     UserRepo userRepo = new();
     LocationRepo locationRepo = new();
     ScheduleRepo scheduleRepo = new();
     ObservationsRepo observationsRepo = new();
-    public UserMapViewModel()
+    public MapViewModel()
     {
         Initialize();
 	}
@@ -33,40 +32,31 @@ public partial class UserMapViewModel : ViewModelBase
     public List<string> FilterColors { get; set; } = new() {"Alle", "Rød", "Gul", "Grøn" };
 
     // Properties relateret til kort og grafik på kortet
-    [ObservableProperty]
-	private Map? map;
-    [ObservableProperty]
-    private GraphicsOverlayCollection? graphicsOverlays;
-    [ObservableProperty]
-    private GraphicsOverlay? hotspotLayer;
-    [ObservableProperty]
-    private GraphicsOverlay? observationLayer;
-    [ObservableProperty]
-    private bool showHotspots = true;
-    [ObservableProperty]
-    private bool showObservations = true;
+    [ObservableProperty] private Map? map;
+    [ObservableProperty] private GraphicsOverlayCollection? graphicsOverlays;
+    [ObservableProperty] private GraphicsOverlay? hotspotLayer;
+    [ObservableProperty] private GraphicsOverlay? observationLayer;
+    [ObservableProperty] private bool showHotspots = true;
 	partial void OnShowHotspotsChanged(bool value)
 	{
 		HotspotLayer!.IsVisible = value;
 	}
+    [ObservableProperty] private bool showObservations = true;
 	partial void OnShowObservationsChanged(bool value)
 	{
 		ObservationLayer!.IsVisible = value;
 	}
 
-	[ObservableProperty]
-    private SimpleMarkerSymbol? currentPoint;
-    [ObservableProperty]
-    private Graphic? currentGraphic;
-    [ObservableProperty]
-    private MapPoint? currentMapPoint;
-    [ObservableProperty]
-    private double size = 10;
+	[ObservableProperty] private SimpleMarkerSymbol? currentPoint;
+    [ObservableProperty] private Graphic? currentGraphic;
+    [ObservableProperty] private MapPoint? currentMapPoint;
+    [ObservableProperty] private double size = 10;
 
     // Properties relateret til hotspot
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string hotspotTitle = "Nyt Hotspot";
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
@@ -85,67 +75,31 @@ public partial class UserMapViewModel : ViewModelBase
                 break;
         }
     }
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(DeleteHotspotCommand))]
     private Hotspot? selectedHotspot;
 
 	// Properties relateret til filtrering af hotspot visning
-	[ObservableProperty]
-    private string? filterColor;
-    [ObservableProperty]
-    private Dictionary<DayOfWeek, bool>? filterDays;
+	[ObservableProperty] private string? filterColor;
+    [ObservableProperty] private Dictionary<DayOfWeek, bool>? filterDays;
 	// Til TimePicker i Opret Hotspot
-	[ObservableProperty]
-	private string? startTime;
-	[ObservableProperty]
-	private string? endTime;
-    [ObservableProperty]
-    private Dictionary<DayOfWeek, bool>? selectedDays;
+	[ObservableProperty] private string? startTime;
+	[ObservableProperty] private string? endTime;
+    [ObservableProperty] private Dictionary<DayOfWeek, bool>? selectedDays;
 
     // Properties relateret til Observations
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
-    private Observation createdObservation;
-    [ObservableProperty]
-    private string? severity;
-	partial void OnSeverityChanged(string? value)
-	{
-	}
-	[ObservableProperty]
-    private string? behaviour;
-	partial void OnBehaviourChanged(string? value)
-	{
-	}
-	[ObservableProperty]
-    private string? approach;
-	partial void OnApproachChanged(string? value)
-	{
-	}
-	[ObservableProperty]
-    private int count;
-    [ObservableProperty]
-    private string? description;
+    private Observation? createdObservation;
+
 	public string UserName { get; set; } = App.config.GetSection("CurrentUser").GetSection("Name").Value ?? "";
     public DateTime CurrentTime { get; set; } = DateTime.Now;
-    public List<string> Behaviours { get; set; } = new() { "Hærværk", "Fest", "Rusmidler", "Intet at bemærke" };
-    public List<string> Approaches { get; set; } = new() { "Intet relevant", "Relationsarbejde", "Samtale", "Guidning", "Positive fællesskaber" };
 
-
-    [RelayCommand(CanExecute = nameof(CanCreate))]
-    public void CreateHotspot()
-    {
-        Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = ClickedLocation(), User = CurrentUser() };
-        hotspot.ID = hotspotRepo.Insert(hotspot, CurrentUser(), ClickedLocation());
-        hotspot.Schedules = CreateSchedule(hotspot);
-
-        Hotspots!.Add(hotspot);
-    }
-    private bool CanCreate()
-    {
-        return HotspotColor != null
-            && HotspotTitle != string.Empty
-            && HotspotTitle != "Nyt Hotspot";
-    }
+    public List<string> Behaviours { get; set; } = new() 
+    { "Hærværk", "Fest", "Rusmidler", "Andet", "Intet at bemærke" };
+    public List<string> Approaches { get; set; } = new() 
+    { "Intet relevant", "Relationsarbejde", "Samtale", "Guidning", "Positive fællesskaber", "Andet" };
 
     private User CurrentUser()
     {
@@ -244,6 +198,22 @@ public partial class UserMapViewModel : ViewModelBase
 				ObservationLayer!.Graphics.Add(new Graphic(location, symbol));
 			}
         }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCreate))]
+    public void CreateHotspot()
+    {
+        Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = ClickedLocation(), User = CurrentUser() };
+        hotspot.ID = hotspotRepo.Insert(hotspot, CurrentUser(), ClickedLocation());
+        hotspot.Schedules = CreateSchedule(hotspot);
+
+        Hotspots!.Add(hotspot);
+    }
+    private bool CanCreate()
+    {
+        return HotspotColor != null
+            && HotspotTitle != string.Empty
+            && HotspotTitle != "Nyt Hotspot";
     }
 
     [RelayCommand]

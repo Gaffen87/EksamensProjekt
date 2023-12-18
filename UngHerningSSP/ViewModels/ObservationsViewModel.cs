@@ -8,10 +8,10 @@ using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 
 namespace UngHerningSSP.ViewModels;
-public partial class UserObservationsViewModel : ViewModelBase
+public partial class ObservationsViewModel : ViewModelBase
 {
     ObservationsRepo observationsRepo = new();
-    public UserObservationsViewModel()
+    public ObservationsViewModel()
     {
         Observations = new();
     }

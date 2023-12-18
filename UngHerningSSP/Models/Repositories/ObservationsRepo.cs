@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UngHerningSSP.DataAccess;
 
 namespace UngHerningSSP.Models.Repositories;
-public class ObservationsRepo : IRepository<Observation>
+public class ObservationsRepo
 {
 	DbAccess dbAccess = new DbAccess();
     public ObservationsRepo()

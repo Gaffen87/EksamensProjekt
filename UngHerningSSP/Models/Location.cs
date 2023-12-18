@@ -10,14 +10,6 @@ public class Location
 
     public double Longitude { get; set; }
 
-    public string Address { get; set; }
-
-    public string AddressNum { get; set; }
-
-    public int PostalCode { get; set; }
-
-    public string City { get; set; }
-
 
 	public static double GetLatitude(MapPoint mapPoint)
 	{

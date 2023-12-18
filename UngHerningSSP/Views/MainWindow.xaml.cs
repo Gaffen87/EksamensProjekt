@@ -25,12 +25,12 @@ public partial class MainWindow : Window
 		btMap.IsEnabled = false;
 		btObs.IsEnabled = false;
 		Frame frame = sender as Frame;
-		if (frame!.Content is UserMapView)
+		if (frame!.Content is MapView)
 		{
 			btObs.IsEnabled = true;
 			btLogOut.Visibility = Visibility.Visible;
 		}
-		if (frame.Content is UserObservationsView)
+		if (frame.Content is ObservationsView)
 		{ 
 			btMap.IsEnabled = true;
 			btLogOut.Visibility = Visibility.Visible;
@@ -39,12 +39,12 @@ public partial class MainWindow : Window
 
 	private void btMap_Click(object sender, RoutedEventArgs e)
 	{
-		MainFrame.NavigationService.Navigate(new UserMapView());
+		MainFrame.NavigationService.Navigate(new MapView());
 	}
 
 	private void btObs_Click(object sender, RoutedEventArgs e)
 	{
-		MainFrame.NavigationService.Navigate(new UserObservationsView());
+		MainFrame.NavigationService.Navigate(new ObservationsView());
 	}
 
 	private void btLogOut_Click(object sender, RoutedEventArgs e)

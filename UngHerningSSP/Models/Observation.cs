@@ -22,6 +22,8 @@ public class Observation
 
     public string Description { get; set; }
 
+    public byte[] Image { get; set; }
+
     public Location Location { get; set; }
 
     public User User { get; set; }

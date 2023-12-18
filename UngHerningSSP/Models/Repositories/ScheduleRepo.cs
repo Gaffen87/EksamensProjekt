@@ -7,7 +7,7 @@ using UngHerningSSP.DataAccess;
 using UngHerningSSP.Models;
 
 namespace UngHerningSSP.Models.Repositories;
-public class ScheduleRepo : IRepository<Schedule>
+public class ScheduleRepo
 {
 	DbAccess dbAccess = new();
 

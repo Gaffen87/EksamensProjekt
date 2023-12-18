@@ -7,10 +7,10 @@ namespace UngHerningSSP.Views;
 /// <summary>
 /// Interaction logic for UserMapView.xaml
 /// </summary>
-public partial class UserMapView : Page
+public partial class MapView : Page
 {
-	UserMapViewModel viewModel = new();
-	public UserMapView()
+	MapViewModel viewModel = new();
+	public MapView()
 	{
 		InitializeComponent();
 		DataContext = viewModel;
@@ -58,12 +58,12 @@ public partial class UserMapView : Page
 
 			Viewpoint view = new(56.13, 8.98, 100000);
 			Viewpoint newView = new(latitude, longitude, 10000);
-			await MapView.SetViewpointAsync(view, TimeSpan.FromSeconds(1));
-			await MapView.SetViewpointAsync(newView, TimeSpan.FromSeconds(1));
+			await MapViewControl.SetViewpointAsync(view, TimeSpan.FromSeconds(1));
+			await MapViewControl.SetViewpointAsync(newView, TimeSpan.FromSeconds(1));
 		}
 		else
 		{
-			await MapView.SetViewpointAsync(new Viewpoint(56.13, 8.98, 100000), TimeSpan.FromSeconds(1));
+			await MapViewControl.SetViewpointAsync(new Viewpoint(56.13, 8.98, 100000), TimeSpan.FromSeconds(1));
 		}
 	}
 

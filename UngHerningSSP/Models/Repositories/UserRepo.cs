@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UngHerningSSP.DataAccess;
 
 namespace UngHerningSSP.Models.Repositories;
-public class UserRepo : IRepository<User>
+public class UserRepo
 {
 	private readonly DbAccess dbAccess = new();
 

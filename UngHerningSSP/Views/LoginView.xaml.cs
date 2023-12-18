@@ -20,7 +20,7 @@ public partial class LoginView : Page
     {
         if (viewModel.ValidateUser())
         {
-            NavigationService.Navigate(new UserMapView());
+            NavigationService.Navigate(new MapView());
         }
     }
 

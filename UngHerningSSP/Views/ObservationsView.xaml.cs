@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 
 namespace UngHerningSSP.Views;
 /// <summary>
-/// Interaction logic for AdminObservationsView.xaml
+/// Interaction logic for UserObservationsView.xaml
 /// </summary>
-public partial class AdminObservationsView : Page
+public partial class ObservationsView : Page
 {
-	public AdminObservationsView()
+	public ObservationsView()
 	{
 		InitializeComponent();
 	}
