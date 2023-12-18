@@ -53,4 +53,6 @@ public partial class MainWindow : Window
 		MainFrame.NavigationService.Navigate(new LoginView());
 		btLogOut.Visibility = Visibility.Collapsed;
 	}
+
+   
 }
