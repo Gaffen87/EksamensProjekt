@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,11 +11,11 @@ public class Observation
 {
     public int ID { get; set; }
 
-    public DateTime DateAndTime { get; set; }
+    public DateTime DateAndTime { get; set; } = DateTime.Now;
 
     public string Severity { get; set; }
 
-    public string Behavior { get; set; }
+    public string Behaviour { get; set; }
 
     public string Approach { get; set; }
 
@@ -22,7 +23,7 @@ public class Observation
 
     public string Description { get; set; }
 
-    public byte[] Image { get; set; }
+    public byte[]? Image { get; set; }
 
     public Location Location { get; set; }
 

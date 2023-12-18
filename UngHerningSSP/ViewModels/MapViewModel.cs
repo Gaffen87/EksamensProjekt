@@ -7,6 +7,7 @@ using Esri.ArcGISRuntime.UI;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Globalization;
 using System.Windows;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
@@ -23,13 +24,13 @@ public partial class MapViewModel : ViewModelBase
     public MapViewModel()
     {
         Initialize();
-	}
+    }
 
     public ObservableCollection<Hotspot>? Hotspots { get; set; }
     public ObservableCollection<Observation>? Observations { get; set; }
 
-    public List<string> Colors { get; set; } = new() {"Rød", "Gul", "Grøn" };
-    public List<string> FilterColors { get; set; } = new() {"Alle", "Rød", "Gul", "Grøn" };
+    public List<string> Colors { get; set; } = new() { "Rød", "Gul", "Grøn" };
+    public List<string> FilterColors { get; set; } = new() { "Alle", "Rød", "Gul", "Grøn" };
 
     // Properties relateret til kort og grafik på kortet
     [ObservableProperty] private Map? map;
@@ -37,17 +38,17 @@ public partial class MapViewModel : ViewModelBase
     [ObservableProperty] private GraphicsOverlay? hotspotLayer;
     [ObservableProperty] private GraphicsOverlay? observationLayer;
     [ObservableProperty] private bool showHotspots = true;
-	partial void OnShowHotspotsChanged(bool value)
-	{
-		HotspotLayer!.IsVisible = value;
-	}
+    partial void OnShowHotspotsChanged(bool value)
+    {
+        HotspotLayer!.IsVisible = value;
+    }
     [ObservableProperty] private bool showObservations = true;
-	partial void OnShowObservationsChanged(bool value)
-	{
-		ObservationLayer!.IsVisible = value;
-	}
+    partial void OnShowObservationsChanged(bool value)
+    {
+        ObservationLayer!.IsVisible = value;
+    }
 
-	[ObservableProperty] private SimpleMarkerSymbol? currentPoint;
+    [ObservableProperty] private SimpleMarkerSymbol? currentPoint;
     [ObservableProperty] private Graphic? currentGraphic;
     [ObservableProperty] private MapPoint? currentMapPoint;
     [ObservableProperty] private double size = 10;
@@ -60,7 +61,7 @@ public partial class MapViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
-	partial void OnHotspotColorChanged(string? value)
+    partial void OnHotspotColorChanged(string? value)
     {
         switch (value)
         {
@@ -80,18 +81,34 @@ public partial class MapViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(DeleteHotspotCommand))]
     private Hotspot? selectedHotspot;
 
-	// Properties relateret til filtrering af hotspot visning
-	[ObservableProperty] private string? filterColor;
+    // Properties relateret til filtrering af hotspot visning
+    [ObservableProperty] private string? filterColor;
     [ObservableProperty] private Dictionary<DayOfWeek, bool>? filterDays;
-	// Til TimePicker i Opret Hotspot
-	[ObservableProperty] private string? startTime;
-	[ObservableProperty] private string? endTime;
+    // Til TimePicker i Opret Hotspot
+    [ObservableProperty] private string? startTime;
+    [ObservableProperty] private string? endTime;
     [ObservableProperty] private Dictionary<DayOfWeek, bool>? selectedDays;
 
     // Properties relateret til Observations
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
-    private Observation? createdObservation;
+    [ObservableProperty] private Observation? createdObservation = new();
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
+    private string approach; 
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
+    private string behaviour;
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
+    private string severity;
+    partial void OnApproachChanged(string value)
+	{
+		CreatedObservation!.Approach = value;
+	}
+	partial void OnBehaviourChanged(string value)
+	{
+		CreatedObservation!.Behaviour = value;
+	}
+    partial void OnSeverityChanged(string value)
+    {
+        CreatedObservation!.Severity = value;
+    }
 
 	public string UserName { get; set; } = App.config.GetSection("CurrentUser").GetSection("Name").Value ?? "";
     public DateTime CurrentTime { get; set; } = DateTime.Now;
@@ -166,6 +183,7 @@ public partial class MapViewModel : ViewModelBase
 		};
 
 		PopulateMap(Hotspots);
+        PopulateMap(Observations);
 	}
 
     public void CreateNewPoint(MapPoint location)
@@ -226,27 +244,35 @@ public partial class MapViewModel : ViewModelBase
     public void FilterMap()
     {
         HotspotLayer!.Graphics.Clear();
+        ObservationLayer?.Graphics.Clear();
         List<Hotspot> filter = new();
+        List<Observation> obsfilter = new();
         foreach (var item in FilterDays!)
         {
             if (item.Value == true)
             {
                 filter.AddRange(Hotspots!.Where(x => x.Schedules.Any(x => x.DayOfWeek == item.Key.ToString())).ToList());
+                obsfilter.AddRange(Observations!.Where(x => x.DateAndTime.DayOfWeek == item.Key));
             }
         }
         if (FilterColor != "Alle")
         {
             filter = filter.Where(x => x.Priority == FilterColor).ToList();
+            obsfilter = obsfilter.Where(x => x.Severity == FilterColor).ToList();
         }
         filter = filter.Distinct().ToList();
+        obsfilter = obsfilter.Distinct().ToList();
         PopulateMap(filter);
+        PopulateMap(obsfilter);
     }
 
     [RelayCommand]
     public void ClearFilter()
     {
         HotspotLayer!.Graphics.Clear();
+        ObservationLayer!.Graphics.Clear();
         PopulateMap(Hotspots!);
+        PopulateMap(Observations!);
     }
 
     [RelayCommand(CanExecute = nameof(CanDelete))]
@@ -269,12 +295,24 @@ public partial class MapViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanCreateObservation))]
     public void CreateObservation()
     {
-
+        Random rand = new();
+        int latint = rand.Next(110, 175);
+        int lonint = rand.Next(900, 999);
+        CreatedObservation!.Location = new Location() 
+        { 
+            Latitude = double.Parse($"56.{latint}", CultureInfo.InvariantCulture), 
+            Longitude = double.Parse($"8.{lonint}", CultureInfo.InvariantCulture) 
+        };
+        CreatedObservation!.Location.ID = locationRepo.InsertLocation(CreatedObservation.Location);
+        CreatedObservation!.User = CurrentUser();
+        CreatedObservation!.ID = observationsRepo.Insert(CreatedObservation!);
+        Observations!.Add(CreatedObservation!);
+        PopulateMap(Observations);
     }
     private bool CanCreateObservation()
     {
-        return CreatedObservation.Approach != null
-            && CreatedObservation.Behavior != null
+        return CreatedObservation!.Approach != null
+            && CreatedObservation.Behaviour != null
             && CreatedObservation.Severity != null;
     }
 }

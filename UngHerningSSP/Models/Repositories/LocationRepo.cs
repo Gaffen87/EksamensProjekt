@@ -24,6 +24,11 @@ namespace UngHerningSSP.Models.Repositories
 		{
 			return dbAccess.LoadSingle<Location, dynamic>("spGetHotspotLocation", new { HotspotID = id });
 		}
+		
+		public Location GetObservationLocation(int id)
+		{
+			return dbAccess.LoadSingle<Location, dynamic>("spGetObservationLocation", new { ObservationID = id });
+		}
 
 		public List<Location> RetrieveAllLocations()
 		{

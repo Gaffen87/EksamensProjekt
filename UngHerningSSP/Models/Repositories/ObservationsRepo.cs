@@ -9,6 +9,7 @@ namespace UngHerningSSP.Models.Repositories;
 public class ObservationsRepo
 {
 	DbAccess dbAccess = new DbAccess();
+	LocationRepo locationRepo = new LocationRepo();
     public ObservationsRepo()
     {
         observations = new List<Observation>(RetrieveAll());
@@ -24,7 +25,7 @@ public class ObservationsRepo
 
 	public int Insert(Observation observation)
 	{
-		return dbAccess.SaveDataAndReturnID("spInsertObservation", new { observation.DateAndTime, observation.Severity, observation.Behavior, observation.Approach, observation.Count, observation.Description, LocationID = observation.Location.ID, UserID = observation.User.ID });
+		return dbAccess.SaveDataAndReturnID("spInsertObservation", new { observation.DateAndTime, observation.Severity, observation.Behaviour, observation.Approach, observation.Count, observation.Description, LocationID = observation.Location.ID, UserID = observation.User.ID });
 	}
 
 	public Observation Retrieve(int id)
@@ -34,7 +35,12 @@ public class ObservationsRepo
 
 	public IEnumerable<Observation> RetrieveAll()
 	{
-		return dbAccess.LoadMultiple<Observation>("spRetrieveAllObservations");
+		var observations = dbAccess.LoadMultiple<Observation>("spRetrieveAllObservations");
+		foreach (var observation in observations)
+		{
+			observation.Location = locationRepo.GetObservationLocation(observation.ID);
+		}
+		return observations;
 	}
 
 	public void Update(Observation observation)
