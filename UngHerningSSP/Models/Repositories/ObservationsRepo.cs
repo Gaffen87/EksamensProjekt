@@ -10,6 +10,7 @@ public class ObservationsRepo
 {
 	DbAccess dbAccess = new DbAccess();
 	LocationRepo locationRepo = new LocationRepo();
+	UserRepo userRepo = new UserRepo();
     public ObservationsRepo()
     {
         observations = new List<Observation>(RetrieveAll());
@@ -20,7 +21,8 @@ public class ObservationsRepo
 
     public void Delete(Observation observation)
 	{
-		throw new NotImplementedException();
+		dbAccess.SaveData("spDeleteObservation", new { observation.ID });
+		dbAccess.SaveData("spDeleteLocation", new { observation.Location.ID });
 	}
 
 	public int Insert(Observation observation)
@@ -39,13 +41,25 @@ public class ObservationsRepo
 		foreach (var observation in observations)
 		{
 			observation.Location = locationRepo.GetObservationLocation(observation.ID);
+			observation.User = userRepo.RetrieveObservationUser(observation.ID);
 		}
 		return observations;
 	}
 
 	public void Update(Observation observation)
 	{
-		throw new NotImplementedException();
+		dbAccess.SaveData("spUpdateObservation", new 
+		{ 
+			observation.ID, 
+			observation.DateAndTime, 
+			observation.Severity, 
+			observation.Behaviour, 
+			observation.Approach,
+			observation.Count,
+			observation.Description,
+			LocationID = observation.Location.ID,
+			UserID = observation.User.ID
+		});
 	}
 
 }

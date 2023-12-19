@@ -11,7 +11,7 @@ public class Observation
 {
     public int ID { get; set; }
 
-    public DateTime DateAndTime { get; set; } = DateTime.Now;
+    public DateTime DateAndTime { get; set; }
 
     public string Severity { get; set; }
 
@@ -22,8 +22,6 @@ public class Observation
     public int Count { get; set; }
 
     public string Description { get; set; }
-
-    public byte[]? Image { get; set; }
 
     public Location Location { get; set; }
 

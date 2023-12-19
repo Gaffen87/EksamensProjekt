@@ -9,7 +9,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:model="clr-namespace:UngHerningSSP.Models"
 	xmlns:viewmodel="clr-namespace:UngHerningSSP.ViewModels"
-	Title="UserMapView"
+	Title="MapView"
 	d:DataContext="{d:DesignInstance Type=viewmodel:MapViewModel}"
 	d:DesignHeight="1080"
 	d:DesignWidth="1920"

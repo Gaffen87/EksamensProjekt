@@ -51,7 +51,7 @@ public partial class MapViewModel : ViewModelBase
     [ObservableProperty] private SimpleMarkerSymbol? currentPoint;
     [ObservableProperty] private Graphic? currentGraphic;
     [ObservableProperty] private MapPoint? currentMapPoint;
-    [ObservableProperty] private double size = 10;
+    [ObservableProperty] private double size = 20;
 
     // Properties relateret til hotspot
     [ObservableProperty]
@@ -85,8 +85,8 @@ public partial class MapViewModel : ViewModelBase
     [ObservableProperty] private string? filterColor;
     [ObservableProperty] private Dictionary<DayOfWeek, bool>? filterDays;
     // Til TimePicker i Opret Hotspot
-    [ObservableProperty] private string? startTime;
-    [ObservableProperty] private string? endTime;
+    [ObservableProperty] private string startTime;
+    [ObservableProperty] private string endTime;
     [ObservableProperty] private Dictionary<DayOfWeek, bool>? selectedDays;
 
     // Properties relateret til Observations
@@ -135,7 +135,6 @@ public partial class MapViewModel : ViewModelBase
         List<Schedule> schedules = new();
         foreach(var item in SelectedDays!)
         {
-            //bool success = TimeOnly.TryParse(StartTime, out TimeOnly startTime) && TimeOnly.TryParse(EndTime, out TimeOnly endTime);
             if (item.Value == true)
             {
                 Schedule schedule = new() { DayOfWeek = item.Key.ToString(), StartTime = DateTime.Parse(StartTime), EndTime = DateTime.Parse(EndTime) };
@@ -144,7 +143,11 @@ public partial class MapViewModel : ViewModelBase
             }
         }
 
-        return schedules;
+        if (schedules.Count > 0 && DateTime.Parse(StartTime!) < DateTime.Parse(EndTime!)) 
+        {
+            return schedules;
+        }
+        throw new ArgumentNullException();
     }
 
     private void Initialize()
@@ -204,14 +207,14 @@ public partial class MapViewModel : ViewModelBase
             if (item is Hotspot)
             {
                 var hotspot = item as Hotspot;
-                var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, hotspot!.Priority, Size);
+                var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, hotspot!.Priority, 20);
                 MapPoint location = new(hotspot.Location.Longitude, hotspot.Location.Latitude, SpatialReferences.Wgs84);
                 HotspotLayer!.Graphics.Add(new Graphic(location, symbol));
             }
             if (item is Observation)
             {
                 var observation = item as Observation;
-				var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.X, observation!.Severity, Size);
+				var symbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.X, observation!.Severity, 10);
 				MapPoint location = new(observation.Location.Longitude, observation.Location.Latitude, SpatialReferences.Wgs84);
 				ObservationLayer!.Graphics.Add(new Graphic(location, symbol));
 			}
@@ -223,9 +226,19 @@ public partial class MapViewModel : ViewModelBase
     {
         Hotspot hotspot = new() { Title = HotspotTitle, Priority = HotspotColor!, Location = ClickedLocation(), User = CurrentUser() };
         hotspot.ID = hotspotRepo.Insert(hotspot, CurrentUser(), ClickedLocation());
-        hotspot.Schedules = CreateSchedule(hotspot);
-
-        Hotspots!.Add(hotspot);
+        
+        try
+        {
+            hotspot.Schedules = CreateSchedule(hotspot);
+            Hotspots!.Add(hotspot);
+        }
+        catch (ArgumentNullException)
+        {
+			HotspotLayer!.Graphics.Clear();
+			PopulateMap(Hotspots!);
+            hotspotRepo.Delete(hotspot);
+            MessageBox.Show($"Der skete en fejl: Vælg et valid tidspunkt", "Fejl");
+		}
     }
     private bool CanCreate()
     {
@@ -305,6 +318,7 @@ public partial class MapViewModel : ViewModelBase
         };
         CreatedObservation!.Location.ID = locationRepo.InsertLocation(CreatedObservation.Location);
         CreatedObservation!.User = CurrentUser();
+        CreatedObservation.DateAndTime = DateTime.Now;
         CreatedObservation!.ID = observationsRepo.Insert(CreatedObservation!);
         Observations!.Add(CreatedObservation!);
         PopulateMap(Observations);

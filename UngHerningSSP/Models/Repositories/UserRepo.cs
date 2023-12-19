@@ -30,6 +30,11 @@ public class UserRepo
 		return dbAccess.LoadSingle<User, dynamic>("spRetrieveUser", new { UserName = username, Password = password });
 	}
 
+	public User RetrieveObservationUser(int id)
+	{
+		return dbAccess.LoadSingle<User, dynamic>("spGetObservationUser", new { ID = id });
+	}
+
 	public IEnumerable<User> RetrieveAll()
 	{
 		return dbAccess.LoadMultiple<User>("spRetrieveAllUsers");

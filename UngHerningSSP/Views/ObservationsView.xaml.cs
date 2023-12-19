@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using UngHerningSSP.ViewModels;
 
 namespace UngHerningSSP.Views;
 /// <summary>
@@ -19,8 +8,51 @@ namespace UngHerningSSP.Views;
 /// </summary>
 public partial class ObservationsView : Page
 {
+	ObservationsViewModel viewModel = new();
 	public ObservationsView()
 	{
 		InitializeComponent();
+		DataContext = viewModel;
+		if (App.config.GetSection("CurrentUser").GetSection("IsAdmin").Value == "false")
+		{
+			btEdit.Visibility = Visibility.Collapsed;
+			btDelete.Visibility = Visibility.Collapsed;
+		}
+	}
+
+	private void Button_Click(object sender, RoutedEventArgs e)
+	{
+		btCancel.Visibility = Visibility.Visible;
+		btSave.Visibility = Visibility.Visible;
+		tbSeverity.Visibility = Visibility.Collapsed;
+		cbSeverity.Visibility = Visibility.Visible;
+		tbBehaviour.Visibility = Visibility.Collapsed;
+		cbBehaviour.Visibility = Visibility.Visible;
+		tbApproach.Visibility = Visibility.Collapsed;
+		cbApproach.Visibility = Visibility.Visible;
+		tbCount.Visibility = Visibility.Collapsed;
+		intCount.Visibility = Visibility.Visible;
+		tbDescription.IsEnabled = true;
+    }
+
+	private void Button_Click_1(object sender, RoutedEventArgs e)
+	{
+		btCancel.Visibility = Visibility.Collapsed;
+		btSave.Visibility = Visibility.Collapsed;
+		tbSeverity.Visibility = Visibility.Visible;
+		cbSeverity.Visibility = Visibility.Collapsed;
+		tbBehaviour.Visibility = Visibility.Visible;
+		cbBehaviour.Visibility = Visibility.Collapsed;
+		tbApproach.Visibility = Visibility.Visible;
+		cbApproach.Visibility = Visibility.Collapsed;
+		tbCount.Visibility = Visibility.Visible;
+		intCount.Visibility = Visibility.Collapsed;
+		tbDescription.IsEnabled = false;
+	}
+
+	private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (viewModel.SelectedObservation != null)
+			viewModel.SetupMap(viewModel.SelectedObservation!.Location.Latitude, viewModel.SelectedObservation.Location.Longitude);
 	}
 }
