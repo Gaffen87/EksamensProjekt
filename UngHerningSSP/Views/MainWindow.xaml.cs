@@ -24,7 +24,9 @@ public partial class MainWindow : Window
 	{
 		btMap.IsEnabled = false;
 		btObs.IsEnabled = false;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 		Frame frame = sender as Frame;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 		if (frame!.Content is MapView)
 		{
 			btObs.IsEnabled = true;

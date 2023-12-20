@@ -21,6 +21,7 @@ public partial class MapViewModel : ViewModelBase
     LocationRepo locationRepo = new();
     ScheduleRepo scheduleRepo = new();
     ObservationsRepo observationsRepo = new();
+
     public MapViewModel()
     {
         Initialize();
@@ -48,7 +49,7 @@ public partial class MapViewModel : ViewModelBase
         ObservationLayer!.IsVisible = value;
     }
 
-    [ObservableProperty] private SimpleMarkerSymbol? currentPoint;
+    [ObservableProperty] private SimpleMarkerSymbol? currentSymbol;
     [ObservableProperty] private Graphic? currentGraphic;
     [ObservableProperty] private MapPoint? currentMapPoint;
     [ObservableProperty] private double size = 20;
@@ -66,13 +67,13 @@ public partial class MapViewModel : ViewModelBase
         switch (value)
         {
             case "Rød":
-                CurrentPoint!.Color = Color.FromArgb(100, Color.Red);
+                CurrentSymbol!.Color = Color.FromArgb(100, Color.Red);
                 break;
             case "Gul":
-                CurrentPoint!.Color = Color.FromArgb(100, Color.Yellow);
+                CurrentSymbol!.Color = Color.FromArgb(100, Color.Yellow);
                 break;
             case "Grøn":
-                CurrentPoint!.Color = Color.FromArgb(100, Color.Green);
+                CurrentSymbol!.Color = Color.FromArgb(100, Color.Green);
                 break;
         }
     }
@@ -191,11 +192,11 @@ public partial class MapViewModel : ViewModelBase
 
     public void CreateNewPoint(MapPoint location)
     {
-        CurrentMapPoint = ArcGIS.CreateMarker(location);
+        CurrentMapPoint = location;
 
-        CurrentPoint = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, HotspotColor!, Size);
+        CurrentSymbol = ArcGIS.CreateSymbol(SimpleMarkerSymbolStyle.Circle, HotspotColor!, Size);
 
-        CurrentGraphic = new Graphic(CurrentMapPoint, CurrentPoint);
+        CurrentGraphic = new Graphic(CurrentMapPoint, CurrentSymbol);
 
         HotspotLayer!.Graphics.Add(CurrentGraphic);
 	}

@@ -37,6 +37,7 @@
 		</Style>
 	</Page.Resources>
 
+
 	<Grid Background="#2f4b5f">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
@@ -411,7 +412,7 @@
 				Maximum="100"
 				Minimum="1"
 				TickFrequency="2"
-				Value="{Binding CurrentPoint.Size}" />
+				Value="{Binding CurrentSymbol.Size}" />
 			<Label Margin="0,0,0,-7" Content="Prioritet:" />
 			<ComboBox
 				Margin="5"

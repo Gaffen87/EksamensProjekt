@@ -37,11 +37,6 @@ public class ArcGIS
 		return layer;
 	}
 
-	public static MapPoint CreateMarker(MapPoint location)
-	{
-		return new MapPoint(location.X, location.Y, location.SpatialReference);
-	}
-
 	// Opretter nyt symbol med de valgte egenskaber 
 	public static SimpleMarkerSymbol CreateSymbol(SimpleMarkerSymbolStyle style, string color, double size)
 	{

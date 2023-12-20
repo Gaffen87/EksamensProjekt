@@ -9,23 +9,23 @@ namespace UngHerningSSP.Views;
 /// </summary>
 public partial class LoginView : Page
 {
-    LoginViewModel viewModel = new();
+	LoginViewModel viewModel = new();
 	public LoginView()
 	{
 		InitializeComponent();
-        DataContext = viewModel;
+		DataContext = viewModel;
 	}
 
-    private void LoginButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (viewModel.ValidateUser())
-        {
-            NavigationService.Navigate(new MapView());
-        }
-    }
-
-    private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+	private void LoginButton_Click(object sender, RoutedEventArgs e)
 	{
-        viewModel.Password = PasswordBox.Password;
-    }
+		if (viewModel.ValidateUser())
+		{
+			NavigationService.Navigate(new MapView());
+		}
+	}
+
+	private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+	{
+		viewModel.Password = PasswordBox.Password;
+	}
 }

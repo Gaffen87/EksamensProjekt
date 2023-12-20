@@ -5,7 +5,7 @@ using UngHerningSSP.ViewModels;
 
 namespace UngHerningSSP.Views;
 /// <summary>
-/// Interaction logic for UserMapView.xaml
+/// Interaction logic for MapView.xaml
 /// </summary>
 public partial class MapView : Page
 {
