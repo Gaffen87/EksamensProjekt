@@ -234,6 +234,7 @@
 				HorizontalContentAlignment="Center"
 				Minimum="0"
 				Value="{Binding CreatedObservation.Count}" />
+			<!--  OBS fejler ligger hos VS eller dem der laver controllen...programmet kan fint starte trods fejlmelding  -->
 			<Label
 				Grid.Row="6"
 				Margin="20,0,0,0"
@@ -488,7 +489,7 @@
 						Content="Søn"
 						IsChecked="{Binding SelectedDays[Sunday]}" />
 				</WrapPanel>
-				<!--  TimePicker  -->
+				<!--  TimePicker OBS fejler ligger hos VS eller dem der laver controllen...programmet kan fint starte trods fejlmelding  -->
 				<WrapPanel Margin="0,10,5,0" HorizontalAlignment="Right">
 					<Label Content="Start tidspunkt:" />
 					<ex:TimePicker

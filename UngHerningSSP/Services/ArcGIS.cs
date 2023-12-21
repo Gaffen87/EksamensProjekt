@@ -21,7 +21,7 @@ public class ArcGIS
 		// Sætter kortets udseende, zoom, sted og referenceskala
 		Map map = new(BasemapStyle.OSMLightGray)
 		{
-			InitialViewpoint = new Viewpoint(latitude, longitude, 100000),
+			InitialViewpoint = new Viewpoint(latitude, longitude, 1000000),
 
 			ReferenceScale = 100000
 		};

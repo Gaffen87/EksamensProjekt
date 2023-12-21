@@ -18,6 +18,7 @@ public partial class LoginViewModel : ViewModelBase
 	[NotifyCanExecuteChangedFor(nameof(NavigateCommand))]
 	private string? password;
 
+	// Tjekker om brugeren findes i databasen og sætter info i appsettings.json alt efter brugerens info
 	public bool ValidateUser()
 	{
 		bool result = false;

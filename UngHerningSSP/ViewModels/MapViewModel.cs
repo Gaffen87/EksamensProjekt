@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Esri.ArcGISRuntime.Data;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Symbology;
@@ -12,10 +13,12 @@ using System.Windows;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
 using UngHerningSSP.Services;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace UngHerningSSP.ViewModels;
 public partial class MapViewModel : ViewModelBase
 {
+    // dependencies
     HotspotRepo hotspotRepo = new();
     UserRepo userRepo = new();
     LocationRepo locationRepo = new();
@@ -25,16 +28,23 @@ public partial class MapViewModel : ViewModelBase
     public MapViewModel()
     {
         Initialize();
+        Shape();
     }
 
+    // lister der indeholder alle hotspots og hændelser fra db
     public ObservableCollection<Hotspot>? Hotspots { get; set; }
     public ObservableCollection<Observation>? Observations { get; set; }
 
+    // Lister der bruges til dropdowns i UI
     public List<string> Colors { get; set; } = new() { "Rød", "Gul", "Grøn" };
     public List<string> FilterColors { get; set; } = new() { "Alle", "Rød", "Gul", "Grøn" };
+	public List<string> Behaviours { get; set; } = new()
+	{ "Hærværk", "Fest", "Rusmidler", "Andet", "Intet at bemærke" };
+	public List<string> Approaches { get; set; } = new()
+	{ "Intet relevant", "Relationsarbejde", "Samtale", "Guidning", "Positive fællesskaber", "Andet" };
 
-    // Properties relateret til kort og grafik på kortet
-    [ObservableProperty] private Map? map;
+	// Properties relateret til kort og grafik på kortet
+	[ObservableProperty] private Map? map;
     [ObservableProperty] private GraphicsOverlayCollection? graphicsOverlays;
     [ObservableProperty] private GraphicsOverlay? hotspotLayer;
     [ObservableProperty] private GraphicsOverlay? observationLayer;
@@ -47,22 +57,29 @@ public partial class MapViewModel : ViewModelBase
     partial void OnShowObservationsChanged(bool value)
     {
         ObservationLayer!.IsVisible = value;
-    }
+	}
+	private async Task Shape()
+	{
+        ShapefileFeatureTable herningShapefile = await ShapefileFeatureTable.OpenAsync(@"../../../Services/ShapeFile/_12_kms_kommunegraenser.shp");
 
+        FeatureLayer newLayer = new(herningShapefile);
+
+        Map!.OperationalLayers.Add(newLayer);
+    } // Henter information fra en shapefile om kommunegrænser og markerer Herning kommune
+
+
+    // properties til at holde på det nyligt lavede symbol på kortet
     [ObservableProperty] private SimpleMarkerSymbol? currentSymbol;
     [ObservableProperty] private Graphic? currentGraphic;
     [ObservableProperty] private MapPoint? currentMapPoint;
     [ObservableProperty] private double size = 20;
 
     // Properties relateret til hotspot
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string hotspotTitle = "Nyt Hotspot";
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateHotspotCommand))]
     private string? hotspotColor;
-    partial void OnHotspotColorChanged(string? value)
+    partial void OnHotspotColorChanged(string? value) // Giver hotspot rigtig farve alt efter valg i dropdown menu
     {
         switch (value)
         {
@@ -78,8 +95,7 @@ public partial class MapViewModel : ViewModelBase
         }
     }
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(DeleteHotspotCommand))]
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(DeleteHotspotCommand))]
     private Hotspot? selectedHotspot;
 
     // Properties relateret til filtrering af hotspot visning
@@ -92,20 +108,21 @@ public partial class MapViewModel : ViewModelBase
 
     // Properties relateret til Observations
     [ObservableProperty] private Observation? createdObservation = new();
+
     [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
     private string approach; 
-    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
-    private string behaviour;
-    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
-    private string severity;
     partial void OnApproachChanged(string value)
 	{
 		CreatedObservation!.Approach = value;
 	}
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
+    private string behaviour;
 	partial void OnBehaviourChanged(string value)
 	{
 		CreatedObservation!.Behaviour = value;
 	}
+    [ObservableProperty][NotifyCanExecuteChangedFor(nameof(CreateObservationCommand))]
+    private string severity;
     partial void OnSeverityChanged(string value)
     {
         CreatedObservation!.Severity = value;
@@ -114,16 +131,13 @@ public partial class MapViewModel : ViewModelBase
 	public string UserName { get; set; } = App.config.GetSection("CurrentUser").GetSection("Name").Value ?? "";
     public DateTime CurrentTime { get; set; } = DateTime.Now;
 
-    public List<string> Behaviours { get; set; } = new() 
-    { "Hærværk", "Fest", "Rusmidler", "Andet", "Intet at bemærke" };
-    public List<string> Approaches { get; set; } = new() 
-    { "Intet relevant", "Relationsarbejde", "Samtale", "Guidning", "Positive fællesskaber", "Andet" };
-
+    // Henter brugeren der er logget ind fra db
     private User CurrentUser()
     {
 		return userRepo.Retrieve(int.Parse(App.config.GetSection("CurrentUser").GetSection("UserID").Value!));
 	}
 
+    // gemmer den klikkede lokation i db
     private Location ClickedLocation()
     {
 		Location location = new() { Latitude = Location.GetLatitude(CurrentMapPoint!), Longitude = Location.GetLongitude(CurrentMapPoint!) };
@@ -131,6 +145,7 @@ public partial class MapViewModel : ViewModelBase
         return location;
 	}
 
+    // Enumerater de valgte dage og laver schedule efter hvilke der er valgt i UI. Gemmer Schedule i DB
     private List<Schedule> CreateSchedule(Hotspot hotspot)
     {
         List<Schedule> schedules = new();
@@ -151,6 +166,7 @@ public partial class MapViewModel : ViewModelBase
         throw new ArgumentNullException();
     }
 
+    // Initialisering af MapViewModel-klassen
     private void Initialize()
     {
 		Hotspots = new(hotspotRepo.RetrieveAll());
@@ -190,6 +206,7 @@ public partial class MapViewModel : ViewModelBase
         PopulateMap(Observations);
 	}
 
+    // Står for at lave et visuelt symbol hvor brugeren har klikket
     public void CreateNewPoint(MapPoint location)
     {
         CurrentMapPoint = location;
@@ -201,6 +218,7 @@ public partial class MapViewModel : ViewModelBase
         HotspotLayer!.Graphics.Add(CurrentGraphic);
 	}
 
+    // indsætter punkter på kortet ud fra en liste og tager højde for om det er en hændelse eller hotspot
     private void PopulateMap(IEnumerable items) 
     {
         foreach (var item in items)

@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Services\_12_kms_kommunegraenser.dbf" />
+    <None Remove="Services\_12_kms_kommunegraenser.prj" />
+    <None Remove="Services\_12_kms_kommunegraenser.shx" />
     <None Remove="Untitled %281%29.png" />
     <None Remove="Views\edit.png" />
   </ItemGroup>
@@ -29,10 +32,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Services\ShapeFile\_12_kms_kommunegraenser.dbf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Services\ShapeFile\_12_kms_kommunegraenser.prj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Services\ShapeFile\_12_kms_kommunegraenser.shx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Untitled (1).png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Views\edit.png" />
+    <Resource Include="Services\ShapeFile\_12_kms_kommunegraenser.shp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

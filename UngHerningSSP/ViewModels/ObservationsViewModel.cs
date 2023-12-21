@@ -3,8 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 using Esri.ArcGISRuntime.Mapping;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using UngHerningSSP.Models;
 using UngHerningSSP.Models.Repositories;
+using UngHerningSSP.Services;
 
 namespace UngHerningSSP.ViewModels;
 public partial class ObservationsViewModel : ViewModelBase
@@ -13,7 +15,8 @@ public partial class ObservationsViewModel : ViewModelBase
     public ObservationsViewModel()
     {
         Observations = new(observationsRepo.RetrieveAll());
-    }
+		Map = ArcGIS.SetupMap(56.13, 8.98);
+	}
 
     public ObservableCollection<Observation> Observations { get; set; }
 
@@ -29,13 +32,6 @@ public partial class ObservationsViewModel : ViewModelBase
 	private Observation? selectedObservation;
 
 	[ObservableProperty] private Map? map;
-	public void SetupMap(double latitude, double longitude)
-	{
-		Map = new(BasemapStyle.OSMStreets)
-		{
-			InitialViewpoint = new Viewpoint(latitude, longitude, 10000),
-		};
-	}
 
 	[RelayCommand(CanExecute = nameof(CanUpdateDelete))]
 	public void DeleteObservation()

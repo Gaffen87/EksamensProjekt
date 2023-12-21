@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Esri.ArcGISRuntime.Mapping;
+using System.Windows;
 using System.Windows.Controls;
 using UngHerningSSP.ViewModels;
 
@@ -50,9 +51,21 @@ public partial class ObservationsView : Page
 		tbDescription.IsEnabled = false;
 	}
 
-	private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (viewModel.SelectedObservation != null)
-			viewModel.SetupMap(viewModel.SelectedObservation!.Location.Latitude, viewModel.SelectedObservation.Location.Longitude);
+		{
+			double latitude = viewModel.SelectedObservation.Location.Latitude;
+			double longitude = viewModel.SelectedObservation.Location.Longitude;
+
+			Viewpoint view = new(56.13, 8.98, 100000);
+			Viewpoint newView = new(latitude, longitude, 10000);
+			await ObsMapView.SetViewpointAsync(view, TimeSpan.FromSeconds(1));
+			await ObsMapView.SetViewpointAsync(newView, TimeSpan.FromSeconds(1));
+		}
+		else
+		{
+			await ObsMapView.SetViewpointAsync(new Viewpoint(56.13, 8.98, 100000), TimeSpan.FromSeconds(1));
+		}
 	}
 }
