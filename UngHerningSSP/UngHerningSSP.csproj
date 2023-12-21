@@ -41,9 +41,6 @@
     <Resource Include="Services\ShapeFile\_12_kms_kommunegraenser.shx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Untitled (1).png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Views\edit.png" />
     <Resource Include="Services\ShapeFile\_12_kms_kommunegraenser.shp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
