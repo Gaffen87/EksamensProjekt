@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="logo.png" />
     <None Remove="Services\_12_kms_kommunegraenser.dbf" />
     <None Remove="Services\_12_kms_kommunegraenser.prj" />
     <None Remove="Services\_12_kms_kommunegraenser.shx" />
@@ -32,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="logo.png" />
     <Resource Include="Services\ShapeFile\_12_kms_kommunegraenser.dbf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
