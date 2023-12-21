@@ -17,7 +17,7 @@
 			<Image
 				Width="300"
 				Margin="10,10,10,10"
-				Source="/Untitled (1).png" />
+				Source="/logo.png" />
 			<TextBlock
 				FontFamily="Bahnschrift"
 				FontSize="16"
