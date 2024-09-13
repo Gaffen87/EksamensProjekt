@@ -8,7 +8,5 @@ Dette projekt skal ses som et koncept over hvordan sådan et system kan udvikles
 
 Selve systemet er lavet i WPF.  
 Vi har benyttet teknologi fra ArcGIS til al funktionalitet og interaktivitet omkring kortet over Herning kommune
-Til persistens har vi brugt SQL Server.
-
-![image](https://github.com/user-attachments/assets/2e83f4a8-9fe8-4fd1-89da-5eaf95700e13)
+Til persistens har vi brugt SQL Server og Dapper
 
