@@ -7,6 +7,6 @@ De ønskede et dokumentationssystem, hvor de kunne dokumentere deres indsats run
 Dette projekt skal ses som et koncept over hvordan sådan et system kan udvikles og udforme sig
 
 Selve systemet er lavet i WPF.  
-Vi har benyttet teknologi fra ArcGIS til al funktionalitet og interaktivitet omkring kortet over Herning kommune
+Vi har benyttet teknologi fra ArcGIS til al funktionalitet og interaktivitet omkring kortet over Herning kommune  
 Til persistens har vi brugt SQL Server og Dapper
 
